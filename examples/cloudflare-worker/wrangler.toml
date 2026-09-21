@@ -1,0 +1,16 @@
+name = "smsga-webhook-worker"
+main = "src/index.js"
+compatibility_date = "2024-09-01"
+
+[vars]
+API_TOKEN = "smsga_live_token_123456"
+HMAC_SECRET = "smsga_live_secret_abcdef"
+# Optional Telegram Bot integration
+# TELEGRAM_BOT_TOKEN = "123456789:ABCdefGHI..."
+# TELEGRAM_CHAT_ID = "123456789"
+
+# Optional Cloudflare KV binding for persistent storage
+# Create with: npx wrangler kv namespace create SMSGA_KV
+# [[kv_namespaces]]
+# binding = "SMSGA_KV"
+# id = "<YOUR_KV_NAMESPACE_ID>"

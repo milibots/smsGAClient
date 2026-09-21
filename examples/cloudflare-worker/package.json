@@ -1,0 +1,21 @@
+{
+  "name": "smsga-cloudflare-worker",
+  "version": "1.0.3",
+  "description": "Cloudflare Worker webhook receiver and live simulator for smsGAClient",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "keywords": [
+    "cloudflare-workers",
+    "smsga",
+    "webhook",
+    "payment-gateway"
+  ],
+  "author": "milibots",
+  "license": "AGPL-3.0",
+  "devDependencies": {
+    "wrangler": "^3.78.0"
+  }
+}
