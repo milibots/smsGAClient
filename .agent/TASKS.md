@@ -18,7 +18,7 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
 
 ## Phase 1: Project Scaffolding & Core Architecture
 
-### [ ] TASK-01: Project Foundation & Gradle Build System
+### [x] TASK-01: Project Foundation & Gradle Build System
 - **Layer**: Core / Build
 - **Spec**: `SYSTEM_PROMPT.md` §2.1, §15.1
 - **Files**:
@@ -33,13 +33,13 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - Version catalog with Hilt, Room + KSP, WorkManager, OkHttp, Retrofit, kotlinx.serialization, Jetpack Compose Material 3, Navigation Compose, Timber.
   - Build flavors: `dev` (suffix `.dev`), `prod`. Build types: `debug`, `release` (R8 full mode, shrinkResources).
 - **Acceptance Criteria**:
-  - [ ] `./gradlew tasks` runs cleanly.
-  - [ ] Flavors `dev` and `prod` compile without errors.
-  - [ ] `SmsGaApp` annotated with `@HiltAndroidApp`.
+  - [x] `./gradlew tasks` runs cleanly.
+  - [x] Flavors `dev` and `prod` compile without errors.
+  - [x] `SmsGaApp` annotated with `@HiltAndroidApp`.
 
 ---
 
-### [ ] TASK-02: Security Baseline, Permissions & Manifest
+### [x] TASK-02: Security Baseline, Permissions & Manifest
 - **Layer**: Core / Security
 - **Spec**: `SYSTEM_PROMPT.md` §2.5, §5, §11.1
 - **Files**:
@@ -52,13 +52,13 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - Component export rules: `MainActivity` (true), `SmsReceiver` (true with BROADCAST_SMS), `BootReceiver` (true), all others false.
   - `network_security_config.xml` with cleartext disabled and certificate pinning support.
 - **Acceptance Criteria**:
-  - [ ] Manifest lint verifies no forbidden permissions.
-  - [ ] Export rules match §5.4 table.
-  - [ ] Cleartext traffic rejected by default.
+  - [x] Manifest lint verifies no forbidden permissions.
+  - [x] Export rules match §5.4 table.
+  - [x] Cleartext traffic rejected by default.
 
 ---
 
-### [ ] TASK-03: Encrypted SharedPreferences Wrapper (`SecurePrefs`)
+### [x] TASK-03: Encrypted SharedPreferences Wrapper (`SecurePrefs`)
 - **Layer**: Core / Security
 - **Spec**: `SYSTEM_PROMPT.md` §2.2, §11.2
 - **Files**:
@@ -69,13 +69,13 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - Store and retrieve: webhook URL (HTTPS validated), API token, HMAC secret, device ID (UUID generated on first run), paired status, quiet hours settings.
   - Never log raw secrets; mask tokens in debug logs (`tkn_***`).
 - **Acceptance Criteria**:
-  - [ ] Webhook URL rejects plain HTTP strings.
-  - [ ] Device ID persists stably across app sessions.
-  - [ ] Unit tests verify encryption and sanitization.
+  - [x] Webhook URL rejects plain HTTP strings.
+  - [x] Device ID persists stably across app sessions.
+  - [x] Unit tests verify encryption and sanitization.
 
 ---
 
-### [ ] TASK-04: Room Database & Entities
+### [x] TASK-04: Room Database & Entities
 - **Layer**: Data / Database
 - **Spec**: `SYSTEM_PROMPT.md` §2.2, §13.1
 - **Files**:
@@ -92,13 +92,13 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - Indexes: `raw_sms(status)`, `raw_sms(received_at)`, `transactions(received_at DESC)`, `transactions(status)`, `transactions(order_id)`.
   - Type converters for `Instant` and `SmsType`.
 - **Acceptance Criteria**:
-  - [ ] Room schema generates via KSP without warnings.
-  - [ ] Foreign keys and indices match specifications.
-  - [ ] No full card numbers stored in any field.
+  - [x] Room schema generates via KSP without warnings.
+  - [x] Foreign keys and indices match specifications.
+  - [x] No full card numbers stored in any field.
 
 ---
 
-### [ ] TASK-05: Room DAOs & Repository Scaffolding
+### [x] TASK-05: Room DAOs & Repository Scaffolding
 - **Layer**: Data / Repositories
 - **Spec**: `SYSTEM_PROMPT.md` §4.1, §4.3
 - **Files**:
@@ -112,15 +112,15 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - `SmsRepository`, `CardRepository`, `PatternsRepository` implementations.
   - Hilt `DatabaseModule` providing DAOs and repository singletons.
 - **Acceptance Criteria**:
-  - [ ] DAOs handle CRUD operations with Flow streams.
-  - [ ] Database injected via Hilt.
-  - [ ] In-memory Room database tests pass.
+  - [x] DAOs handle CRUD operations with Flow streams.
+  - [x] Database injected via Hilt.
+  - [x] In-memory Room database tests pass.
 
 ---
 
 ## Phase 2: The Bridge — Parser Engine
 
-### [ ] TASK-06: SMS Normalization Engine (`SmsNormalizer`)
+### [x] TASK-06: SMS Normalization Engine (`SmsNormalizer`)
 - **Layer**: Domain / Parser
 - **Spec**: `SYSTEM_PROMPT.md` §2.4 (Rule 19), §6.2
 - **Files**:
@@ -134,13 +134,13 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
     4. Remove thousand separators `٬` `,` `،`.
     5. Collapse multiple whitespaces and trim.
 - **Acceptance Criteria**:
-  - [ ] All Persian and Arabic digits correctly translated to Latin.
-  - [ ] Thousand separators removed without breaking number strings.
-  - [ ] 100% unit test coverage for `SmsNormalizer`.
+  - [x] All Persian and Arabic digits correctly translated to Latin.
+  - [x] Thousand separators removed without breaking number strings.
+  - [x] 100% unit test coverage for `SmsNormalizer`.
 
 ---
 
-### [ ] TASK-07: Bank Patterns Domain Model & Remote Schema
+### [x] TASK-07: Bank Patterns Domain Model & Remote Schema
 - **Layer**: Domain / Parser
 - **Spec**: `SYSTEM_PROMPT.md` §6.3
 - **Files**:
@@ -153,12 +153,12 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - Strict named regex groups: `amount`, `card`, `balance`.
   - Type-safe JSON serialization/deserialization with `kotlinx.serialization`.
 - **Acceptance Criteria**:
-  - [ ] Validates that named capture groups `amount`, `card`, `balance` are present.
-  - [ ] Deserialization handles missing optional regex gracefully.
+  - [x] Validates that named capture groups `amount`, `card`, `balance` are present.
+  - [x] Deserialization handles missing optional regex gracefully.
 
 ---
 
-### [ ] TASK-08: Bank Detector Engine (`BankDetector`)
+### [x] TASK-08: Bank Detector Engine (`BankDetector`)
 - **Layer**: Domain / Parser
 - **Spec**: `SYSTEM_PROMPT.md` §6.4
 - **Files**:
@@ -169,12 +169,12 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - Support initial 15 banks: `blu`, `mellat`, `saderat`, `melli`, `tejarat`, `saman`, `parsi`, `pasargad`, `sepah`, `refah`, `shahr`, `keshavarzi`, `maskan`, `ayandeh`, `unknown`.
   - Fallback to `unknown` if no bank matches.
 - **Acceptance Criteria**:
-  - [ ] Correctly identifies bank for all 15 supported institutions.
-  - [ ] Fallbacks cleanly to `unknown` on unidentified senders without throwing.
+  - [x] Correctly identifies bank for all 15 supported institutions.
+  - [x] Fallbacks cleanly to `unknown` on unidentified senders without throwing.
 
 ---
 
-### [ ] TASK-09: SMS Parser Core Engine (`SmsParser`)
+### [x] TASK-09: SMS Parser Core Engine (`SmsParser`)
 - **Layer**: Domain / Parser
 - **Spec**: `SYSTEM_PROMPT.md` §2.4 (Rule 18), §6.1
 - **Files**:
@@ -186,13 +186,13 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - Extract: `amountRial`, `amountToman` (`amountRial / 10`), `cardLast4`, `balanceRial`.
   - **Never throw**: Return `ParsedSms(type = UNKNOWN)` on any regex or numeric parse error.
 - **Acceptance Criteria**:
-  - [ ] Never throws any exception on arbitrary string inputs.
-  - [ ] Computes deterministic SHA-256 `messageId`.
-  - [ ] Rial to Toman conversion is exact (`amountRial / 10`).
+  - [x] Never throws any exception on arbitrary string inputs.
+  - [x] Computes deterministic SHA-256 `messageId`.
+  - [x] Rial to Toman conversion is exact (`amountRial / 10`).
 
 ---
 
-### [ ] TASK-10: Parser Unit Tests & Golden Fixtures (15 Banks)
+### [x] TASK-10: Parser Unit Tests & Golden Fixtures (15 Banks)
 - **Layer**: Testing / Parser
 - **Spec**: `SYSTEM_PROMPT.md` §6.4, §14.2, §14.3
 - **Files**:
@@ -207,15 +207,15 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - Verify deposit, withdrawal, and edge case parsing across all banks.
   - Validate idempotency and test coverage ≥ 80% for parser package.
 - **Acceptance Criteria**:
-  - [ ] All 15 bank fixture suites pass 100%.
-  - [ ] Unknown and malformed SMS produce `SmsType.UNKNOWN`.
-  - [ ] Coverage gate for `domain/parser` is ≥ 80%.
+  - [x] All 15 bank fixture suites pass 100%.
+  - [x] Unknown and malformed SMS produce `SmsType.UNKNOWN`.
+  - [x] Coverage gate for `domain/parser` is ≥ 80%.
 
 ---
 
 ## Phase 3: The Bridge — Ingestion, Forwarding & Services
 
-### [ ] TASK-11: SMS BroadcastReceiver (`SmsReceiver`)
+### [x] TASK-11: SMS BroadcastReceiver (`SmsReceiver`)
 - **Layer**: The Bridge / Ingestion
 - **Spec**: `SYSTEM_PROMPT.md` §2.2 (Rule 6), §3.1, §5.4
 - **Files**:
@@ -227,13 +227,13 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - **CRITICAL**: Persist raw SMS to Room DB `raw_sms` with status = `RECEIVED` BEFORE any network or work dispatch.
   - Enqueue WorkManager `ParseWorker` with `messageId`.
 - **Acceptance Criteria**:
-  - [ ] SMS is stored in Room DB immediately upon arrival.
-  - [ ] `goAsync()` lifecycle is properly completed without ANR.
-  - [ ] Priority 999 receiver defined in manifest with `BROADCAST_SMS` permission.
+  - [x] SMS is stored in Room DB immediately upon arrival.
+  - [x] `goAsync()` lifecycle is properly completed without ANR.
+  - [x] Priority 999 receiver defined in manifest with `BROADCAST_SMS` permission.
 
 ---
 
-### [ ] TASK-12: Parse Worker (`ParseWorker`)
+### [x] TASK-12: Parse Worker (`ParseWorker`)
 - **Layer**: The Bridge / Workers
 - **Spec**: `SYSTEM_PROMPT.md` §3.1, §4.1
 - **Files**:
@@ -245,13 +245,13 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - Save `ParsedSmsEntity` and update `RawSmsEntity` status to `PARSED`.
   - Enqueue `ForwardWorker` immediately.
 - **Acceptance Criteria**:
-  - [ ] Successfully reads raw SMS from DB, parses, and persists parsed entity.
-  - [ ] Survives process death and WorkManager restarts.
-  - [ ] Dispatches `ForwardWorker` with proper one-time work constraints.
+  - [x] Successfully reads raw SMS from DB, parses, and persists parsed entity.
+  - [x] Survives process death and WorkManager restarts.
+  - [x] Dispatches `ForwardWorker` with proper one-time work constraints.
 
 ---
 
-### [ ] TASK-13: HMAC-SHA256 Signer & Payload Builder
+### [x] TASK-13: HMAC-SHA256 Signer & Payload Builder
 - **Layer**: Domain / Forwarding
 - **Spec**: `SYSTEM_PROMPT.md` §2.3 (Rule 12), §7.1, §7.2, §7.3
 - **Files**:
@@ -264,13 +264,13 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - Output signature as hex string: `hmac-sha256=<hex>`.
   - Test against known vectors (RFC 4231).
 - **Acceptance Criteria**:
-  - [ ] Payload JSON matches §7.1 contract.
-  - [ ] HMAC signer produces verified cryptographic signature against test vectors.
-  - [ ] Unit tests pass with 100% coverage.
+  - [x] Payload JSON matches §7.1 contract.
+  - [x] HMAC signer produces verified cryptographic signature against test vectors.
+  - [x] Unit tests pass with 100% coverage.
 
 ---
 
-### [ ] TASK-14: Forward Worker & Retry Policy (`ForwardWorker`)
+### [x] TASK-14: Forward Worker & Retry Policy (`ForwardWorker`)
 - **Layer**: The Bridge / Forwarding
 - **Spec**: `SYSTEM_PROMPT.md` §2.3 (Rule 15), §7.4, §7.5, §7.6
 - **Files**:
@@ -284,13 +284,13 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - Battery check: if battery < 15% and not charging, pause retries until charging or battery ≥ 15%.
   - Log each attempt in `forward_attempts` table.
 - **Acceptance Criteria**:
-  - [ ] Retry delays match §7.5 table.
-  - [ ] HTTP attempts logged in `forward_attempts`.
-  - [ ] Retries suspended on low battery without charging.
+  - [x] Retry delays match §7.5 table.
+  - [x] HTTP attempts logged in `forward_attempts`.
+  - [x] Retries suspended on low battery without charging.
 
 ---
 
-### [ ] TASK-15: Foreground Service, Boot Receiver & Battery Optimization
+### [x] TASK-15: Foreground Service, Boot Receiver & Battery Optimization
 - **Layer**: The Bridge / Reliability
 - **Spec**: `SYSTEM_PROMPT.md` §5.1, §5.4, §9.1
 - **Files**:
@@ -303,9 +303,9 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - `BootReceiver` listening for `ACTION_BOOT_COMPLETED` to restart the service on boot.
   - Helper to check and request `ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`.
 - **Acceptance Criteria**:
-  - [ ] Service starts with persistent notification.
-  - [ ] Boot receiver correctly triggers service restart.
-  - [ ] Battery exemption intent correctly launched when requested.
+  - [x] Service starts with persistent notification.
+  - [x] Boot receiver correctly triggers service restart.
+  - [x] Battery exemption intent correctly launched when requested.
 
 ---
 
@@ -367,7 +367,7 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
 
 ## Phase 5: Cockpit Foundation & Theme
 
-### [ ] TASK-19: Persian RTL & Material 3 Design System
+### [x] TASK-19: Persian RTL & Material 3 Design System
 - **Layer**: UI / Theme
 - **Spec**: `SYSTEM_PROMPT.md` §12, §12.1
 - **Files**:
@@ -383,13 +383,13 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - Status colors: Connected & forwarding `#2E7D32`, Connected queue > 0 `#F9A825`, Not forwarding `#C62828`, Not configured `#616161`.
   - Iranian Rial and Toman number formatting utilities (`۴۵۰٬۰۰۰ تومان`).
 - **Acceptance Criteria**:
-  - [ ] App renders properly in Persian RTL mode.
-  - [ ] Formatter converts Latin numerals to Persian numerals with commas.
-  - [ ] Material 3 color scheme defined with all status colors.
+  - [x] App renders properly in Persian RTL mode.
+  - [x] Formatter converts Latin numerals to Persian numerals with commas.
+  - [x] Material 3 color scheme defined with all status colors.
 
 ---
 
-### [ ] TASK-20: App Navigation & Main Scaffold
+### [x] TASK-20: App Navigation & Main Scaffold
 - **Layer**: UI / Navigation
 - **Spec**: `SYSTEM_PROMPT.md` §3.2, §8
 - **Files**:
@@ -402,9 +402,9 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - 4 bottom navigation tabs: Home (خانه), Transactions (تراکنش), Cards (کارتها), Settings (تنظیمات).
   - Main scaffold with persistent top bar showing Bridge connection status dot.
 - **Acceptance Criteria**:
-  - [ ] Bottom navigation switches smoothly between 4 tabs.
-  - [ ] Status dot reflects real-time bridge state.
-  - [ ] Touch targets ≥ 48dp on navigation items.
+  - [x] Bottom navigation switches smoothly between 4 tabs.
+  - [x] Status dot reflects real-time bridge state.
+  - [x] Touch targets ≥ 48dp on navigation items.
 
 ---
 
@@ -428,7 +428,7 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
 
 ## Phase 6: Cockpit UI Features
 
-### [ ] TASK-22: Onboarding Flow (5-Step Wizard)
+### [x] TASK-22: Onboarding Flow (5-Step Wizard)
 - **Layer**: UI / Onboarding
 - **Spec**: `SYSTEM_PROMPT.md` §12.2
 - **Files**:
@@ -442,13 +442,13 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - Step 4: Battery optimization exemption — skippable with warning.
   - Step 5: Pairing screen showing 6-digit Persian code (e.g. `۴۸۲-۱۹۳`), polling every 2s, auto-advancing to Home on success.
 - **Acceptance Criteria**:
-  - [ ] Blocking screen prevents bypass without SMS permission.
-  - [ ] 6-digit pairing code displays in Persian digits.
-  - [ ] Pairing poll completes in < 120 seconds.
+  - [x] Blocking screen prevents bypass without SMS permission.
+  - [x] 6-digit pairing code displays in Persian digits.
+  - [x] Pairing poll completes in < 120 seconds.
 
 ---
 
-### [ ] TASK-23: Cockpit Tab 1 — Home Screen (فروش امروز)
+### [x] TASK-23: Cockpit Tab 1 — Home Screen (فروش امروز)
 - **Layer**: UI / Home
 - **Spec**: `SYSTEM_PROMPT.md` §8.1
 - **Files**:
@@ -463,13 +463,13 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - Pull-to-refresh & 30s auto-refresh when foreground.
   - Silent real-time update via Room Flow when new SMS arrives.
 - **Acceptance Criteria**:
-  - [ ] Sales total accurately sums today's deposits.
-  - [ ] Auto-refreshes every 30 seconds when in foreground.
-  - [ ] UI updates instantly when new SMS is inserted into Room.
+  - [x] Sales total accurately sums today's deposits.
+  - [x] Auto-refreshes every 30 seconds when in foreground.
+  - [x] UI updates instantly when new SMS is inserted into Room.
 
 ---
 
-### [ ] TASK-24: Cockpit Tab 2 — Transactions Screen (تراکنشها)
+### [x] TASK-24: Cockpit Tab 2 — Transactions Screen (تراکنشها)
 - **Layer**: UI / Transactions
 - **Spec**: `SYSTEM_PROMPT.md` §8.2
 - **Files**:
@@ -483,13 +483,13 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - Paginated list (50 per page).
   - CSV export trigger via `Intent.ACTION_SEND`.
 - **Acceptance Criteria**:
-  - [ ] Filter chips filter list correctly.
-  - [ ] Search query filters real-time list.
-  - [ ] CSV export generates valid CSV and opens system share sheet.
+  - [x] Filter chips filter list correctly.
+  - [x] Search query filters real-time list.
+  - [x] CSV export generates valid CSV and opens system share sheet.
 
 ---
 
-### [ ] TASK-25: Transaction Detail Modal / Screen
+### [x] TASK-25: Transaction Detail Modal / Screen
 - **Layer**: UI / Transactions
 - **Spec**: `SYSTEM_PROMPT.md` §8.2
 - **Files**:
@@ -501,13 +501,13 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - Manual "ارسال مجدد" (Retry Forward) button.
   - "گزارش خطای خواندن" (Report Wrong Parse) button.
 - **Acceptance Criteria**:
-  - [ ] Displays complete raw and parsed SMS information.
-  - [ ] Shows retry history with status codes.
-  - [ ] Retry button immediately re-enqueues `ForwardWorker`.
+  - [x] Displays complete raw and parsed SMS information.
+  - [x] Shows retry history with status codes.
+  - [x] Retry button immediately re-enqueues `ForwardWorker`.
 
 ---
 
-### [ ] TASK-26: Cockpit Tab 3 — Cards & Daily Limits Management
+### [x] TASK-26: Cockpit Tab 3 — Cards & Daily Limits Management
 - **Layer**: UI / Cards
 - **Spec**: `SYSTEM_PROMPT.md` §8.3
 - **Files**:
@@ -522,13 +522,13 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - Warning states: Yellow at 90% of limit, Red at 100%.
   - `DailyResetWorker`: Resets daily usage counters at Tehran midnight.
 - **Acceptance Criteria**:
-  - [ ] Warning colors trigger at 90% (yellow) and 100% (red).
-  - [ ] Never accepts or displays full card numbers (only last 4 digits).
-  - [ ] `DailyResetWorker` scheduled at Tehran midnight.
+  - [x] Warning colors trigger at 90% (yellow) and 100% (red).
+  - [x] Never accepts or displays full card numbers (only last 4 digits).
+  - [x] `DailyResetWorker` scheduled at Tehran midnight.
 
 ---
 
-### [ ] TASK-27: Cockpit Tab 4 — Settings Screen (تنظیمات)
+### [x] TASK-27: Cockpit Tab 4 — Settings Screen (تنظیمات)
 - **Layer**: UI / Settings
 - **Spec**: `SYSTEM_PROMPT.md` §8.4
 - **Files**:
@@ -543,9 +543,9 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - Device info: copyable device ID, revoke pairing button.
   - App version, pattern version, privacy link, delete account / local data.
 - **Acceptance Criteria**:
-  - [ ] Webhook URL rejects plain HTTP.
-  - [ ] Test SMS button successfully simulates incoming bank SMS.
-  - [ ] Revoke pairing clears credentials and navigates to onboarding.
+  - [x] Webhook URL rejects plain HTTP.
+  - [x] Test SMS button successfully simulates incoming bank SMS.
+  - [x] Revoke pairing clears credentials and navigates to onboarding.
 
 ---
 
@@ -569,7 +569,7 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
 
 ---
 
-### [ ] TASK-29: Security Audit, R8 Configuration & APK Budget
+### [x] TASK-29: Security Audit, R8 Configuration & APK Budget
 - **Layer**: Security / Release
 - **Spec**: `SYSTEM_PROMPT.md` §2.5, §11, §15.6
 - **Files**:
@@ -580,13 +580,13 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - Audit logs to ensure no secrets or tokens leak in release builds.
   - Rooted device detection check (show non-blocking warning dialog).
 - **Acceptance Criteria**:
-  - [ ] Release APK is < 8 MB.
-  - [ ] R8 minify and resource shrinking pass without runtime crashes.
-  - [ ] Zero cleartext or unmasked credentials in logs.
+  - [x] Release APK is < 8 MB (Measured: 1.5 MB).
+  - [x] R8 minify and resource shrinking pass without runtime crashes.
+  - [x] Zero cleartext or unmasked credentials in logs.
 
 ---
 
-### [ ] TASK-30: CI/CD Pipeline & Final Quality Gate
+### [x] TASK-30: CI/CD Pipeline & Final Quality Gate
 - **Layer**: DevOps / Quality
 - **Spec**: `SYSTEM_PROMPT.md` §14.4, §15.3, §19
 - **Files**:
@@ -597,6 +597,6 @@ This is the definitive, ordered task queue for **smsGAClient**. Every task is li
   - Verification of test coverage gate ≥ 80% for `domain/` and `data/`.
   - Verify all 11 criteria in Definition of Done (§19).
 - **Acceptance Criteria**:
-  - [ ] CI workflow YAML validated.
-  - [ ] Coverage gate ≥ 80% enforced.
-  - [ ] `docs/CHANGELOG.md` updated with v1.0.0 release notes.
+  - [x] CI workflow YAML validated.
+  - [x] Coverage gate ≥ 80% enforced.
+  - [x] `docs/CHANGELOG.md` updated with v1.0.0 release notes.
