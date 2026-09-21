@@ -112,7 +112,16 @@ fun SmsGaNavHost(
                 val viewModel: SettingsViewModel = hiltViewModel()
                 SettingsScreen(
                     viewModel = viewModel,
-                    onTestSms = {  }
+                    onTestSms = {  },
+                    onNavigateToPatternStudio = { navController.navigate(NavRoutes.PatternStudio.route) }
+                )
+            }
+
+            composable(NavRoutes.PatternStudio.route) {
+                val viewModel: ir.smsgaclient.ui.patterns.PatternStudioViewModel = hiltViewModel()
+                ir.smsgaclient.ui.patterns.PatternStudioScreen(
+                    viewModel = viewModel,
+                    onBack = { navController.popBackStack() }
                 )
             }
         }

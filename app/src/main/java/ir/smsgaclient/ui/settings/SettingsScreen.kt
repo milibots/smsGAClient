@@ -13,11 +13,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.BatteryChargingFull
 import androidx.compose.material.icons.filled.CloudDone
 import androidx.compose.material.icons.filled.FilterList
@@ -72,6 +74,7 @@ import kotlinx.coroutines.launch
 fun SettingsScreen(
     viewModel: SettingsViewModel,
     onTestSms: () -> Unit,
+    onNavigateToPatternStudio: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -217,6 +220,43 @@ fun SettingsScreen(
                             uncheckedThumbColor = TextMuted,
                             uncheckedTrackColor = SurfaceElevated
                         )
+                    )
+                }
+            }
+        }
+
+        item {
+            SettingsCard(
+                icon = Icons.Default.AutoAwesome,
+                title = "استودیوی هوشمند آموزش الگو (AI Studio)"
+            ) {
+                Text(
+                    text = "اگر بانک جدیدی دارید یا فرمت پیامک‌های بانک شما تغییر کرده است، پیامک را در استودیو پیست کنید تا سیستم بدون نیاز به آپدیت برنامه، الگو را به صورت خودکار یاد بگیرد و فعال کند.",
+                    style = CockpitTypography.bodySmall,
+                    color = TextSecondary,
+                    lineHeight = 20.sp
+                )
+                Spacer(modifier = Modifier.height(14.dp))
+                Button(
+                    onClick = onNavigateToPatternStudio,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(22.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = PureWhite,
+                        contentColor = PureBlack
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.AutoAwesome,
+                        contentDescription = null,
+                        tint = PureBlack,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = "ورود به استودیوی آموزش و ثبت الگو",
+                        style = CockpitTypography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                        color = PureBlack
                     )
                 }
             }
