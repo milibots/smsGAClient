@@ -42,3 +42,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Testing & CI/CD**:
   - Comprehensive unit test suite with 100% pass rate: `SmsNormalizerTest`, `BankDetectorTest`, `ParserDepositTest`, `ParserWithdrawTest`, `ParserUnknownTest`, `ParserIdempotencyTest`, `HmacSignerTest`, `PayloadBuilderTest`, `RetryPolicyTest`, `PersianNumberFormatterTest`.
   - GitHub Actions workflow (`.github/workflows/ci.yml`).
+
+## [1.0.0-alpha02] - 2026-09-21
+
+### Changed & Enhanced (UI/UX Pro Max & Websima Design Elevation)
+- **Design Intelligence Applied** (`ui-ux-pro-max` + `websima-ui-skills`):
+  - **OLED Dark Mode Tokens**: Enhanced `Color.kt` with Midnight Background (`#0A0F1D`), Card Surface (`#162032`), Elevated Surface (`#1E2B42`), and Iranian Bank Brand Colors (Pasargad, Blu, Mellat, Saman, Melli, Sepah, Tejarat, Keshavarzi, Parsian, Refah, Shahr, etc.).
+  - **Persian Typography System**: Calibrated line heights to 1.65–1.8x on all body copy, eliminating diacritic and character clipping (گ، ژ، پ، چ، ی). Added distinct typography tokens for card numbers, currency badges, and code snippets.
+  - **Animated Bridge Status Dot**: Integrated infinite transition glowing heartbeat pulse in `BridgeStatusBar` when forwarding is active, with merchant status subtext.
+  - **Sales Hero Card**: Elevated with gradient mesh overlay, Toman headline with separate currency styling, Rial subtitle, and average ticket calculation pill.
+  - **Iranian Bank Card Aesthetic**: Built `IranianBankCard` and `BankCardWithQuotaCard` with EMV chip simulation, masked LTR card numbers (`•••• •••• •••• ۱۲۳۴`), cardholder name, and animated daily quota progress bars.
+  - **Receipt-Style Transaction Detail**: Added structured bank transaction receipt, bank avatars, copyable message IDs, and raw SMS code block.
+  - **Touch & Accessibility Ergonomics**: Verified strict touch targets ≥ 48dp on all interactive elements, AutoMirrored icons for RTL consistency, and high-contrast WCAG AAA text/container pairs.
+  - **Release APK**: Verified R8 full mode shrinking producing a **1.53 MB** production APK (well under the 8 MB budget).
+

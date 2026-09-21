@@ -11,15 +11,15 @@ import androidx.compose.ui.unit.LayoutDirection
 private val DarkColorScheme = darkColorScheme(
     primary = TealPrimary,
     onPrimary = TextPrimary,
-    primaryContainer = Navy800,
-    onPrimaryContainer = TealPrimaryLight,
-    secondary = BlueAccent,
+    primaryContainer = SurfaceElevated,
+    onPrimaryContainer = TealAccent,
+    secondary = AmberGold,
     onSecondary = TextPrimary,
-    background = SurfaceDark,
+    background = BackgroundMidnight,
     onBackground = TextPrimary,
     surface = CardBackground,
     onSurface = TextPrimary,
-    surfaceVariant = Navy700,
+    surfaceVariant = SurfaceElevated,
     onSurfaceVariant = TextSecondary,
     outline = BorderSubtle
 )

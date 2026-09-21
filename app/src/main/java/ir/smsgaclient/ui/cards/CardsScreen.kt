@@ -1,8 +1,12 @@
 // app/src/main/java/ir/smsgaclient/ui/cards/CardsScreen.kt
 package ir.smsgaclient.ui.cards
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,21 +14,29 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CreditCard
+import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,20 +47,34 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import ir.smsgaclient.ui.common.BankAvatar
+import ir.smsgaclient.ui.common.EmvChipGraphic
+import ir.smsgaclient.ui.common.getBankInfo
+import ir.smsgaclient.ui.theme.AmberGold
+import ir.smsgaclient.ui.theme.BackgroundMidnight
+import ir.smsgaclient.ui.theme.BorderSubtle
 import ir.smsgaclient.ui.theme.CardBackground
+import ir.smsgaclient.ui.theme.CardNumberStyle
 import ir.smsgaclient.ui.theme.CockpitTypography
+import ir.smsgaclient.ui.theme.Navy700
 import ir.smsgaclient.ui.theme.Navy800
 import ir.smsgaclient.ui.theme.StatusConnectedForwarding
 import ir.smsgaclient.ui.theme.StatusConnectedQueued
 import ir.smsgaclient.ui.theme.StatusNotForwarding
-import ir.smsgaclient.ui.theme.SurfaceDark
+import ir.smsgaclient.ui.theme.SurfaceElevated
+import ir.smsgaclient.ui.theme.TealAccent
 import ir.smsgaclient.ui.theme.TealPrimary
-import ir.smsgaclient.ui.theme.TealPrimaryLight
 import ir.smsgaclient.ui.theme.TextMuted
 import ir.smsgaclient.ui.theme.TextPrimary
 import ir.smsgaclient.ui.theme.TextSecondary
 import ir.smsgaclient.util.PersianNumberFormatter
+import kotlin.math.max
 
 @Composable
 fun CardsScreen(
@@ -63,12 +89,18 @@ fun CardsScreen(
             FloatingActionButton(
                 onClick = { showAddDialog = true },
                 containerColor = TealPrimary,
-                contentColor = TextPrimary
+                contentColor = TextPrimary,
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.size(56.dp)
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "افزودن کارت")
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "افزودن کارت",
+                    tint = Color.White
+                )
             }
         },
-        containerColor = SurfaceDark,
+        containerColor = BackgroundMidnight,
         modifier = modifier
     ) { paddingValues ->
         Column(
@@ -77,32 +109,89 @@ fun CardsScreen(
                 .padding(paddingValues)
                 .padding(16.dp)
         ) {
-            Text(
-                text = "مدیریت کارت‌ها و سقف روزانه",
-                style = CockpitTypography.headlineMedium,
-                color = TextPrimary
-            )
+            // Header Section
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = "کارت‌های بانکی و سقف روزانه",
+                        style = CockpitTypography.headlineMedium,
+                        color = TextPrimary
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "پایش هوشمند سقف انتقال وجه و پیشگیری از مسدودی",
+                        style = CockpitTypography.bodySmall,
+                        color = TextMuted
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Cards List or Empty State
             if (uiState.cards.isEmpty()) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = CardBackground)
+                    shape = RoundedCornerShape(18.dp),
+                    colors = CardDefaults.cardColors(containerColor = CardBackground),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
                 ) {
-                    Text(
-                        text = "هنوز کارتی ثبت نشده است. با زدن دکمه + کارت بانکی خود را اضافه کنید.",
-                        style = CockpitTypography.bodyMedium,
-                        color = TextMuted,
-                        modifier = Modifier.padding(24.dp)
-                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(32.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(56.dp)
+                                .clip(CircleShape)
+                                .background(SurfaceElevated),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.CreditCard,
+                                contentDescription = null,
+                                tint = TextMuted,
+                                modifier = Modifier.size(28.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(14.dp))
+                        Text(
+                            text = "هنوز کارتی ثبت نشده است",
+                            style = CockpitTypography.titleMedium,
+                            color = TextPrimary
+                        )
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(
+                            text = "با افزودن کارت‌های بانکی مقصد، مصرف روزانه و سقف هر کارت به صورت زنده رصد می‌شود.",
+                            style = CockpitTypography.bodySmall,
+                            color = TextMuted,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Button(
+                            onClick = { showAddDialog = true },
+                            colors = ButtonDefaults.buttonColors(containerColor = TealPrimary)
+                        ) {
+                            Text(text = "افزودن اولین کارت", color = Color.White)
+                        }
+                    }
                 }
             } else {
                 LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(uiState.cards) { cardUsage ->
-                        CardItemRow(cardUsage = cardUsage)
+                    items(
+                        items = uiState.cards,
+                        key = { it.card.id }
+                    ) { cardUsage ->
+                        BankCardWithQuotaCard(cardUsage = cardUsage)
                     }
                 }
             }
@@ -121,72 +210,160 @@ fun CardsScreen(
 }
 
 @Composable
-fun CardItemRow(cardUsage: CardWithUsage) {
+fun BankCardWithQuotaCard(cardUsage: CardWithUsage) {
     val card = cardUsage.card
+    val bankInfo = getBankInfo(card.bankId)
+    val remainingRial = max(0L, card.dailyLimitRial - cardUsage.usageRial)
+    val remainingToman = remainingRial / 10
+
+    val animatedProgress by animateFloatAsState(
+        targetValue = cardUsage.usagePercent.coerceIn(0f, 1f),
+        animationSpec = tween(durationMillis = 800),
+        label = "quotaProgress"
+    )
+
     val progressColor = when {
-        cardUsage.usagePercent >= 1.0f -> StatusNotForwarding   // Red (100%)
-        cardUsage.usagePercent >= 0.9f -> StatusConnectedQueued // Yellow (90%)
-        else -> StatusConnectedForwarding                       // Green
+        cardUsage.usagePercent >= 1.0f -> StatusNotForwarding   // 100% Red
+        cardUsage.usagePercent >= 0.9f -> StatusConnectedQueued // 90% Yellow
+        else -> StatusConnectedForwarding                       // Normal Green
     }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = CardBackground)
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = CardBackground),
+        border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
+            // Realistic Iranian Mini Card Header
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp)
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(
+                        Brush.linearGradient(
+                            listOf(
+                                bankInfo.primaryColor,
+                                bankInfo.secondaryColor,
+                                Color(0xFF0F172A)
+                            )
+                        )
+                    )
+                    .border(1.dp, Color(0x33FFFFFF), RoundedCornerShape(14.dp))
+                    .padding(14.dp)
+            ) {
+                Column(
+                    modifier = Modifier.matchParentSize(),
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = bankInfo.nameFa,
+                            style = CockpitTypography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                        EmvChipGraphic(modifier = Modifier.size(width = 30.dp, height = 22.dp))
+                    }
+
+                    // Masked card number (LTR centered)
+                    Text(
+                        text = "••••  ••••  ••••  ${PersianNumberFormatter.toPersianDigits(card.last4)}",
+                        style = CardNumberStyle.copy(fontSize = 16.sp),
+                        color = Color.White
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = card.holderName.ifEmpty { "صاحب حساب" },
+                            style = CockpitTypography.bodySmall,
+                            color = Color.White.copy(alpha = 0.9f)
+                        )
+                        Text(
+                            text = "شتاب",
+                            style = CockpitTypography.labelSmall,
+                            color = Color.White.copy(alpha = 0.7f)
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            // Quota Progress Bar
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "بانک ${card.bankId}",
-                    style = CockpitTypography.titleMedium,
-                    color = TextPrimary
+                    text = "میزان مصرف روزانه",
+                    style = CockpitTypography.titleSmall,
+                    color = TextSecondary
                 )
                 Text(
-                    text = "•••• ${card.last4}",
-                    style = CockpitTypography.titleMedium,
-                    color = TealPrimaryLight
+                    text = "${PersianNumberFormatter.toPersianDigits((cardUsage.usagePercent * 100).toInt().toString())}٪",
+                    style = CockpitTypography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = progressColor
                 )
             }
 
-            Spacer(modifier = Modifier.height(6.dp))
-
-            Text(
-                text = card.holderName,
-                style = CockpitTypography.bodyMedium,
-                color = TextSecondary
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            LinearProgressIndicator(
-                progress = { cardUsage.usagePercent.coerceIn(0f, 1f) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(8.dp),
-                color = progressColor,
-                trackColor = Navy800
-            )
-
             Spacer(modifier = Modifier.height(8.dp))
 
+            LinearProgressIndicator(
+                progress = { animatedProgress },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp)
+                    .clip(RoundedCornerShape(4.dp)),
+                color = progressColor,
+                trackColor = SurfaceElevated
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // Usage & Remaining Stats
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = "مصرف: ${PersianNumberFormatter.formatToman(cardUsage.usageRial / 10)}",
-                    style = CockpitTypography.bodySmall ?: CockpitTypography.bodyMedium,
-                    color = TextMuted
-                )
-                Text(
-                    text = "سقف: ${PersianNumberFormatter.formatToman(card.dailyLimitRial / 10)}",
-                    style = CockpitTypography.bodySmall ?: CockpitTypography.bodyMedium,
-                    color = TextMuted
-                )
+                Column {
+                    Text(
+                        text = "مصرف شده:",
+                        style = CockpitTypography.bodySmall,
+                        color = TextMuted
+                    )
+                    Text(
+                        text = PersianNumberFormatter.formatToman(cardUsage.usageRial / 10),
+                        style = CockpitTypography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = TextPrimary
+                    )
+                }
+
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(
+                        text = "مانده تا سقف:",
+                        style = CockpitTypography.bodySmall,
+                        color = TextMuted
+                    )
+                    Text(
+                        text = PersianNumberFormatter.formatToman(remainingToman),
+                        style = CockpitTypography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = if (remainingToman > 0) TealAccent else StatusNotForwarding
+                    )
+                }
             }
         }
     }
@@ -197,59 +374,115 @@ fun AddCardDialog(
     onDismiss: () -> Unit,
     onConfirm: (bank: String, last4: String, holder: String, limit: Long) -> Unit
 ) {
-    var bank by remember { mutableStateOf("blu") }
+    var selectedBank by remember { mutableStateOf("blu") }
     var last4 by remember { mutableStateOf("") }
     var holder by remember { mutableStateOf("") }
-    var limit by remember { mutableStateOf("500000000") } // 50 million Toman
+    var limitToman by remember { mutableStateOf("50000000") } // 50 million Toman default
+
+    val popularBanks = listOf(
+        "blu" to "بلوبانک",
+        "pasargad" to "پاسارگاد",
+        "saman" to "سامان",
+        "mellat" to "ملت",
+        "melli" to "ملی",
+        "sepah" to "سپه",
+        "keshavarzi" to "کشاورزی"
+    )
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = "افزودن کارت جدید") },
+        title = {
+            Text(
+                text = "افزودن کارت بانکی جدید",
+                style = CockpitTypography.titleLarge,
+                color = TextPrimary
+            )
+        },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedTextField(
-                    value = bank,
-                    onValueChange = { bank = it },
-                    label = { Text("نام بانک") },
-                    singleLine = true
+            Column(
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "انتخاب بانک:",
+                    style = CockpitTypography.titleSmall,
+                    color = TextSecondary
                 )
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    items(popularBanks) { (id, name) ->
+                        val isSelected = selectedBank == id
+                        FilterChip(
+                            selected = isSelected,
+                            onClick = { selectedBank = id },
+                            label = { Text(text = name, style = CockpitTypography.labelSmall) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = TealPrimary,
+                                selectedLabelColor = Color.White
+                            )
+                        )
+                    }
+                }
+
                 OutlinedTextField(
                     value = last4,
-                    onValueChange = { if (it.length <= 4) last4 = it },
+                    onValueChange = { if (it.length <= 4 && it.all { char -> char.isDigit() }) last4 = it },
                     label = { Text("۴ رقم آخر کارت") },
-                    singleLine = true
+                    placeholder = { Text("مثلاً ۴۸۲۱") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = TealPrimary,
+                        unfocusedBorderColor = BorderSubtle
+                    )
                 )
+
                 OutlinedTextField(
                     value = holder,
                     onValueChange = { holder = it },
                     label = { Text("نام صاحب کارت") },
-                    singleLine = true
+                    placeholder = { Text("مثلاً علی رضایی") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = TealPrimary,
+                        unfocusedBorderColor = BorderSubtle
+                    )
                 )
+
                 OutlinedTextField(
-                    value = limit,
-                    onValueChange = { limit = it },
-                    label = { Text("سقف روزانه (ریال)") },
-                    singleLine = true
+                    value = limitToman,
+                    onValueChange = { if (it.all { char -> char.isDigit() }) limitToman = it },
+                    label = { Text("سقف روزانه (تومان)") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = TealPrimary,
+                        unfocusedBorderColor = BorderSubtle
+                    )
                 )
             }
         },
         confirmButton = {
             Button(
                 onClick = {
-                    val limitVal = limit.toLongOrNull() ?: 0L
+                    val limitVal = (limitToman.toLongOrNull() ?: 50_000_000L) * 10 // to Rial
                     if (last4.length == 4) {
-                        onConfirm(bank, last4, holder, limitVal)
+                        onConfirm(selectedBank, last4, holder, limitVal)
                     }
                 },
+                enabled = last4.length == 4,
                 colors = ButtonDefaults.buttonColors(containerColor = TealPrimary)
             ) {
-                Text(text = "افزودن")
+                Text(text = "افزودن کارت", color = Color.White)
             }
         },
         dismissButton = {
             OutlinedButton(onClick = onDismiss) {
-                Text(text = "انصراف")
+                Text(text = "انصراف", color = TextSecondary)
             }
-        }
+        },
+        containerColor = CardBackground,
+        shape = RoundedCornerShape(18.dp)
     )
 }
+
