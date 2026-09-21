@@ -48,15 +48,26 @@
 
 ## 🏦 بانک‌های تحت پوشش / Supported Banks
 
-| بانک | نماد | پشتیبانی واریز / برداشت | استخراج مانده و پیگیری |
-| :--- | :---: | :---: | :---: |
-| **بلوبانک (Blu Bank)** | 🔵 | ✅ | ✅ |
-| **بانک سامان (Saman)** | 🔷 | ✅ | ✅ |
-| **بانک پاسارگاد (Pasargad)** | 🟡 | ✅ | ✅ |
-| **بانک ملت (Mellat)** | 🔴 | ✅ | ✅ |
-| **بانک سپه (Sepah)** | ⚪ | ✅ | ✅ |
-| **بانک ملی ایران (Melli)** | 🟢 | ✅ | ✅ |
-| **بانک صادرات، پارسیان، تجارت، شهر، کشاورزی، آینده، رفاه** | 🏦 | ✅ | ✅ |
+| بانک | نماد | پشتیبانی واریز / برداشت | استخراج مانده و پیگیری | فایل الگو |
+| :--- | :---: | :---: | :---: | :---: |
+| **بلوبانک (Blu Bank)** | 🔵 | ✅ | ✅ | [`banks/blu.json`](banks/blu.json) |
+| **بانک سامان (Saman)** | 🔷 | ✅ | ✅ | [`banks/saman.json`](banks/saman.json) |
+| **بانک پاسارگاد (Pasargad)** | 🟡 | ✅ | ✅ | [`banks/pasargad.json`](banks/pasargad.json) |
+| **بانک ملت (Mellat)** | 🔴 | ✅ | ✅ | [`banks/mellat.json`](banks/mellat.json) |
+| **بانک سپه (Sepah)** | ⚪ | ✅ | ✅ | [`banks/sepah.json`](banks/sepah.json) |
+| **بانک ملی ایران (Melli)** | 🟢 | ✅ | ✅ | [`banks/melli.json`](banks/melli.json) |
+| **بانک تجارت (Tejarat)** | 🔵 | ✅ | ✅ | [`banks/tejarat.json`](banks/tejarat.json) |
+| **بانک پارسیان (Parsian)** | 🟤 | ✅ | ✅ | [`banks/parsian.json`](banks/parsian.json) |
+| **بانک صادرات (Saderat)** | 🔵 | ✅ | ✅ | [`banks/saderat.json`](banks/saderat.json) |
+| **بانک شهر (Shahr)** | 🔴 | ✅ | ✅ | [`banks/shahr.json`](banks/shahr.json) |
+| **بانک آینده (Ayandeh)** | 🟤 | ✅ | ✅ | [`banks/ayandeh.json`](banks/ayandeh.json) |
+| **بانک کشاورزی (Keshavarzi)** | 🟢 | ✅ | ✅ | [`banks/keshavarzi.json`](banks/keshavarzi.json) |
+| **بانک رفاه کارگران (Refah)** | 🔵 | ✅ | ✅ | [`banks/refah.json`](banks/refah.json) |
+| **بانک رسالت (Resalat)** | 🟡 | ✅ | ✅ | [`banks/resalat.json`](banks/resalat.json) |
+| **پست بانک ایران (Post Bank)** | 🟢 | ✅ | ✅ | [`banks/postbank.json`](banks/postbank.json) |
+
+> 🤝 **مشارکت همگانی و افزودن بانک جدید**:
+> کلیه فرمت‌های پیامک بانکی به تفکیک در پوشه [`banks/`](banks/) قرار دارند. جهت اضافه کردن بانک جدید یا به‌روزرسانی رجکس‌های موجود، کافیست یک فایل JSON جدید اضافه کرده و **Pull Request (PR)** ارسال فرمایید! برای مشاهده توضیحات کامل، به [راهنمای مشارکت الگوها (`banks/README.md`)](banks/README.md) مراجعه کنید.
 
 ---
 

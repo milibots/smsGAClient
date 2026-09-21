@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BankPatternSchema",
+  "type": "object",
+  "required": ["id", "name_fa", "name_en", "senders", "deposit_regex"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "name_fa": {
+      "type": "string"
+    },
+    "name_en": {
+      "type": "string"
+    },
+    "card_prefixes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "senders": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "detect_regex": {
+      "type": ["string", "null"]
+    },
+    "deposit_regex": {
+      "type": ["string", "null"]
+    },
+    "withdraw_regex": {
+      "type": ["string", "null"]
+    },
+    "card_regex": {
+      "type": ["string", "null"]
+    },
+    "balance_regex": {
+      "type": ["string", "null"]
+    },
+    "sample_sms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "raw", "expected_amount_rial"],
+        "properties": {
+          "type": { "type": "string", "enum": ["DEPOSIT", "WITHDRAWAL", "UNKNOWN"] },
+          "raw": { "type": "string" },
+          "expected_amount_rial": { "type": ["integer", "null"] },
+          "expected_card_last4": { "type": ["string", "null"] },
+          "expected_balance_rial": { "type": ["integer", "null"] }
+        }
+      }
+    }
+  }
+}

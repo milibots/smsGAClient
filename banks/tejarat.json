@@ -1,0 +1,21 @@
+{
+  "id": "tejarat",
+  "name_fa": "بانک تجارت",
+  "name_en": "Tejarat Bank",
+  "card_prefixes": ["627353", "585983"],
+  "senders": ["TEJARAT", "TejaratBank", "+98200021"],
+  "detect_regex": "(تجارت|tejarat)",
+  "deposit_regex": "واریز[:\\s]*(?<amount>\\d+)\\s*ریال",
+  "withdraw_regex": "برداشت[:\\s]*(?<amount>\\d+)\\s*ریال",
+  "card_regex": "کارت[:\\s]*(?<card>\\d{4})",
+  "balance_regex": "موجودی[:\\s]*(?<balance>\\d+)",
+  "sample_sms": [
+    {
+      "type": "DEPOSIT",
+      "raw": "بانک تجارت\nواریز: ۸٬۰۰۰٬۰۰۰ ریال\nکارت: ۵۵۱۲\nموجودی: ۹۰٬۰۰۰٬۰۰۰ ریال",
+      "expected_amount_rial": 8000000,
+      "expected_card_last4": "5512",
+      "expected_balance_rial": 90000000
+    }
+  ]
+}

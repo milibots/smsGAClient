@@ -1,0 +1,28 @@
+{
+  "id": "mellat",
+  "name_fa": "بانک ملت",
+  "name_en": "Bank Mellat",
+  "card_prefixes": ["610433", "991975"],
+  "senders": ["MELLAT", "Mellat", "+98200000"],
+  "detect_regex": "(ملت|mellat)",
+  "deposit_regex": "واریز[:\\s]*(?<amount>\\d+)\\s*ریال",
+  "withdraw_regex": "برداشت[:\\s]*(?<amount>\\d+)\\s*ریال",
+  "card_regex": "کارت[:\\s]*(?<card>\\d{4})",
+  "balance_regex": "موجودی[:\\s]*(?<balance>\\d+)",
+  "sample_sms": [
+    {
+      "type": "DEPOSIT",
+      "raw": "بانک ملت\nواریز: ۲٬۵۰۰٬۰۰۰ ریال\nکارت: ۵۶۷۸\nموجودی: ۴۵٬۰۰۰٬۰۰۰ ریال\nپیگیری: ۹۸۷۶۵۴۳۲",
+      "expected_amount_rial": 2500000,
+      "expected_card_last4": "5678",
+      "expected_balance_rial": 45000000
+    },
+    {
+      "type": "WITHDRAWAL",
+      "raw": "بانک ملت\nبرداشت: ۵۰۰٬۰۰۰ ریال\nکارت: ۵۶۷۸\nموجودی: ۴۴٬۵۰۰٬۰۰۰ ریال\nپیگیری: ۱۲۳۴۵۶۷۸",
+      "expected_amount_rial": 500000,
+      "expected_card_last4": "5678",
+      "expected_balance_rial": 44500000
+    }
+  ]
+}

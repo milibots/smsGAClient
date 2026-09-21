@@ -1,0 +1,28 @@
+{
+  "id": "blu",
+  "name_fa": "بلوبانک",
+  "name_en": "Blu Bank",
+  "card_prefixes": ["621986"],
+  "senders": ["BLUBANK", "blubank", "+982000021"],
+  "detect_regex": "(بلو|blu|سامان.*بلو)",
+  "deposit_regex": "\\+(?<amount>\\d+)\\s*ریال",
+  "withdraw_regex": "-(?<amount>\\d+)\\s*ریال",
+  "card_regex": "(?<card>\\*{0,4}\\d{4})",
+  "balance_regex": "موجودی[:\\s]*(?<balance>\\d+)",
+  "sample_sms": [
+    {
+      "type": "DEPOSIT",
+      "raw": "+۴٬۵۰۰٬۲۸۰ ریال — بلو کارت ****۱۲۳۴ موجودی: ۱۲۵٬۰۰۰٬۰۰۰ ریال",
+      "expected_amount_rial": 4500280,
+      "expected_card_last4": "1234",
+      "expected_balance_rial": 125000000
+    },
+    {
+      "type": "WITHDRAWAL",
+      "raw": "-۱٬۲۰۰٬۰۰۰ ریال — بلو کارت ****۱۲۳۴ موجودی: ۱۲۳٬۸۰۰٬۰۰۰ ریال",
+      "expected_amount_rial": 1200000,
+      "expected_card_last4": "1234",
+      "expected_balance_rial": 123800000
+    }
+  ]
+}

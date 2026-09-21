@@ -1,0 +1,21 @@
+{
+  "id": "parsian",
+  "name_fa": "بانک پارسیان",
+  "name_en": "Parsian Bank",
+  "card_prefixes": ["622106", "639194"],
+  "senders": ["PARSIAN", "ParsianBank", "+98200020"],
+  "detect_regex": "(پارسیان|parsian)",
+  "deposit_regex": "واریز[:\\s]*(?<amount>\\d+)\\s*ریال",
+  "withdraw_regex": "برداشت[:\\s]*(?<amount>\\d+)\\s*ریال",
+  "card_regex": "کارت[:\\s]*(?<card>\\d{4})",
+  "balance_regex": "موجودی[:\\s]*(?<balance>\\d+)",
+  "sample_sms": [
+    {
+      "type": "DEPOSIT",
+      "raw": "بانک پارسیان\nواریز: ۳٬۴۰۰٬۰۰۰ ریال\nکارت: ۳۰۹۱\nموجودی: ۱۸٬۲۰۰٬۰۰۰ ریال",
+      "expected_amount_rial": 3400000,
+      "expected_card_last4": "3091",
+      "expected_balance_rial": 18200000
+    }
+  ]
+}

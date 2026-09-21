@@ -1,0 +1,21 @@
+{
+  "id": "shahr",
+  "name_fa": "بانک شهر",
+  "name_en": "Shahr Bank",
+  "card_prefixes": ["504706", "502806"],
+  "senders": ["SHAHR", "ShahrBank", "+98200028"],
+  "detect_regex": "(شهر|shahr)",
+  "deposit_regex": "واریز[:\\s]*(?<amount>\\d+)\\s*ریال",
+  "withdraw_regex": "برداشت[:\\s]*(?<amount>\\d+)\\s*ریال",
+  "card_regex": "کارت[:\\s]*(?<card>\\d{4})",
+  "balance_regex": "موجودی[:\\s]*(?<balance>\\d+)",
+  "sample_sms": [
+    {
+      "type": "DEPOSIT",
+      "raw": "بانک شهر\nواریز: ۱٬۸۰۰٬۰۰۰ ریال\nکارت: ۶۶۷۷\nموجودی: ۴۰٬۰۰۰٬۰۰۰ ریال",
+      "expected_amount_rial": 1800000,
+      "expected_card_last4": "6677",
+      "expected_balance_rial": 40000000
+    }
+  ]
+}

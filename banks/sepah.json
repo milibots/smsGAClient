@@ -1,0 +1,21 @@
+{
+  "id": "sepah",
+  "name_fa": "بانک سپه",
+  "name_en": "Bank Sepah",
+  "card_prefixes": ["589210"],
+  "senders": ["SEPAH", "BankSepah", "+9820004"],
+  "detect_regex": "(سپه|sepah)",
+  "deposit_regex": "واریز[:\\s]*(?<amount>\\d+)\\s*ریال",
+  "withdraw_regex": "برداشت[:\\s]*(?<amount>\\d+)\\s*ریال",
+  "card_regex": "کارت[:\\s]*(?<card>\\d{4})",
+  "balance_regex": "موجودی[:\\s]*(?<balance>\\d+)",
+  "sample_sms": [
+    {
+      "type": "DEPOSIT",
+      "raw": "بانک سپه\nواریز: ۱٬۵۰۰٬۰۰۰ ریال\nکارت: ۷۷۸۸\nموجودی: ۳۳٬۰۰۰٬۰۰۰ ریال",
+      "expected_amount_rial": 1500000,
+      "expected_card_last4": "7788",
+      "expected_balance_rial": 33000000
+    }
+  ]
+}

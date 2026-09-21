@@ -1,0 +1,21 @@
+{
+  "id": "melli",
+  "name_fa": "بانک ملی ایران",
+  "name_en": "Bank Melli Iran",
+  "card_prefixes": ["603799"],
+  "senders": ["BMI", "MELLI", "BankMelli", "+9820000"],
+  "detect_regex": "(ملی|melli|bmi)",
+  "deposit_regex": "واریز[:\\s]*(?<amount>\\d+)\\s*ریال",
+  "withdraw_regex": "برداشت[:\\s]*(?<amount>\\d+)\\s*ریال",
+  "card_regex": "(کارت|حساب)[:\\s]*(?<card>\\d{4})",
+  "balance_regex": "مانده[:\\s]*(?<balance>\\d+)",
+  "sample_sms": [
+    {
+      "type": "DEPOSIT",
+      "raw": "بانک ملی ایران\nواریز: ۶٬۲۰۰٬۰۰۰ ریال\nحساب: ۱۲۳۴\nمانده: ۸۴٬۰۰۰٬۰۰۰ ریال\nشناسه پیگیری: ۸۷۶۵۴۳۲۱",
+      "expected_amount_rial": 6200000,
+      "expected_card_last4": "1234",
+      "expected_balance_rial": 84000000
+    }
+  ]
+}

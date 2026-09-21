@@ -1,0 +1,21 @@
+{
+  "id": "ayandeh",
+  "name_fa": "بانک آینده",
+  "name_en": "Ayandeh Bank",
+  "card_prefixes": ["636214"],
+  "senders": ["AYANDEH", "AyandehBank", "+98200040"],
+  "detect_regex": "(آینده|ayandeh)",
+  "deposit_regex": "واریز[:\\s]*(?<amount>\\d+)\\s*ریال",
+  "withdraw_regex": "برداشت[:\\s]*(?<amount>\\d+)\\s*ریال",
+  "card_regex": "کارت[:\\s]*(?<card>\\d{4})",
+  "balance_regex": "موجودی[:\\s]*(?<balance>\\d+)",
+  "sample_sms": [
+    {
+      "type": "DEPOSIT",
+      "raw": "بانک آینده\nواریز: ۹٬۵۰۰٬۰۰۰ ریال\nکارت: ۱۱۸۸\nموجودی: ۱۹۵٬۰۰۰٬۰۰۰ ریال",
+      "expected_amount_rial": 9500000,
+      "expected_card_last4": "1188",
+      "expected_balance_rial": 195000000
+    }
+  ]
+}

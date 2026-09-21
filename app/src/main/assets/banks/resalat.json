@@ -1,0 +1,21 @@
+{
+  "id": "resalat",
+  "name_fa": "بانک قرض‌الحسنه رسالت",
+  "name_en": "Resalat Bank",
+  "card_prefixes": ["504172"],
+  "senders": ["RESALAT", "RQBank", "+98200030"],
+  "detect_regex": "(رسالت|resalat)",
+  "deposit_regex": "واریز(\\s*مبلغ)?[:\\s]*(?<amount>\\d+)\\s*ریال",
+  "withdraw_regex": "برداشت(\\s*مبلغ)?[:\\s]*(?<amount>\\d+)\\s*ریال",
+  "card_regex": "(کارت|سپرده)[:\\s]*(?<card>\\d{4})",
+  "balance_regex": "موجودی[:\\s]*(?<balance>\\d+)",
+  "sample_sms": [
+    {
+      "type": "DEPOSIT",
+      "raw": "بانک رسالت\nواریز مبلغ: ۷٬۷۰۰٬۰۰۰ ریال\nسپرده: ۸۰۸۰\nموجودی: ۱۱۰٬۰۰۰٬۰۰۰ ریال",
+      "expected_amount_rial": 7700000,
+      "expected_card_last4": "8080",
+      "expected_balance_rial": 110000000
+    }
+  ]
+}
