@@ -319,12 +319,20 @@ fun BankCardQuotaDetailCard(cardUsage: CardWithUsage) {
                             .background(SurfaceElevated),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.CreditCard,
-                            contentDescription = null,
-                            tint = PureWhite,
-                            modifier = Modifier.size(18.dp)
-                        )
+                        if (bankInfo.logoRes != null) {
+                            androidx.compose.foundation.Image(
+                                painter = androidx.compose.ui.res.painterResource(id = bankInfo.logoRes),
+                                contentDescription = bankInfo.nameFa,
+                                modifier = Modifier.size(22.dp)
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.CreditCard,
+                                contentDescription = null,
+                                tint = PureWhite,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
                     }
                     Column {
                         Text(

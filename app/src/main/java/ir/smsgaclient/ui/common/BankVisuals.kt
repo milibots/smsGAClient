@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -57,6 +58,10 @@ import ir.smsgaclient.ui.theme.StatusNeutralContainer
 import ir.smsgaclient.ui.theme.StatusNeutralOnContainer
 import ir.smsgaclient.ui.theme.StatusQueuedContainer
 import ir.smsgaclient.ui.theme.StatusQueuedOnContainer
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import ir.smsgaclient.R
 import ir.smsgaclient.ui.theme.TextPrimary
 import ir.smsgaclient.util.PersianNumberFormatter
 
@@ -64,25 +69,28 @@ data class BankInfo(
     val nameFa: String,
     val shortNameFa: String,
     val primaryColor: Color,
-    val secondaryColor: Color
+    val secondaryColor: Color,
+    @DrawableRes val logoRes: Int? = null
 )
 
 fun getBankInfo(bankId: String): BankInfo {
     return when (bankId.lowercase().trim()) {
-        "blu" -> BankInfo("بلوبانک", "بلو", BankBlu, Color(0xFF16181B))
-        "pasargad" -> BankInfo("بانک پاسارگاد", "پاس", BankPasargad, Color(0xFF0F1012))
-        "saman" -> BankInfo("بانک سامان", "سام", BankSaman, Color(0xFF1B1D22))
-        "mellat" -> BankInfo("بانک ملت", "ملت", BankMellat, Color(0xFF141518))
-        "melli" -> BankInfo("بانک ملی ایران", "ملی", BankMelli, Color(0xFF101114))
-        "sepah" -> BankInfo("بانک سپه", "سپه", BankSepah, Color(0xFF181A1F))
-        "tejarat" -> BankInfo("بانک تجارت", "تجار", BankTejarat, Color(0xFF15171B))
-        "keshavarzi" -> BankInfo("بانک کشاورزی", "کشو", BankKeshavarzi, Color(0xFF121417))
-        "parsian" -> BankInfo("بانک پارسیان", "پارس", BankParsian, Color(0xFF191B20))
-        "refah" -> BankInfo("بانک رفاه کارگران", "رفاه", BankRefah, Color(0xFF111215))
-        "shahr" -> BankInfo("بانک شهر", "شهر", BankShahr, Color(0xFF1A1C22))
-        "saderat" -> BankInfo("بانک صادرات", "صادر", BankSaderat, Color(0xFF131417))
-        "ayandeh" -> BankInfo("بانک آینده", "آیند", BankAyandeh, Color(0xFF18191E))
-        else -> BankInfo("بانک ${bankId.ifEmpty { "نامشخص" }}", "بانک", BankDefault, Color(0xFF151619))
+        "blu" -> BankInfo("بلوبانک", "بلو", BankBlu, Color(0xFF16181B), R.drawable.ic_bank_blu)
+        "pasargad" -> BankInfo("بانک پاسارگاد", "پاس", BankPasargad, Color(0xFF0F1012), R.drawable.ic_bank_pasargad)
+        "saman" -> BankInfo("بانک سامان", "سام", BankSaman, Color(0xFF1B1D22), R.drawable.ic_bank_saman)
+        "mellat" -> BankInfo("بانک ملت", "ملت", BankMellat, Color(0xFF141518), R.drawable.ic_bank_mellat)
+        "melli" -> BankInfo("بانک ملی ایران", "ملی", BankMelli, Color(0xFF101114), R.drawable.ic_bank_melli)
+        "sepah" -> BankInfo("بانک سپه", "سپه", BankSepah, Color(0xFF181A1F), R.drawable.ic_bank_sepah)
+        "tejarat" -> BankInfo("بانک تجارت", "تجار", BankTejarat, Color(0xFF15171B), R.drawable.ic_bank_tejarat)
+        "keshavarzi" -> BankInfo("بانک کشاورزی", "کشو", BankKeshavarzi, Color(0xFF121417), R.drawable.ic_bank_keshavarzi)
+        "parsian" -> BankInfo("بانک پارسیان", "پارس", BankParsian, Color(0xFF191B20), R.drawable.ic_bank_parsian)
+        "refah" -> BankInfo("بانک رفاه کارگران", "رفاه", BankRefah, Color(0xFF111215), R.drawable.ic_bank_refah)
+        "shahr" -> BankInfo("بانک شهر", "شهر", BankShahr, Color(0xFF1A1C22), R.drawable.ic_bank_shahr)
+        "saderat" -> BankInfo("بانک صادرات", "صادر", BankSaderat, Color(0xFF131417), R.drawable.ic_bank_saderat)
+        "ayandeh" -> BankInfo("بانک آینده", "آیند", BankAyandeh, Color(0xFF18191E), R.drawable.ic_bank_ayandeh)
+        "resalat" -> BankInfo("بانک رسالت", "رسالت", Color(0xFF232529), Color(0xFF151619), R.drawable.ic_bank_resalat)
+        "postbank" -> BankInfo("پست بانک ایران", "پست", Color(0xFF202327), Color(0xFF141618), R.drawable.ic_bank_postbank)
+        else -> BankInfo("بانک ${bankId.ifEmpty { "نامشخص" }}", "بانک", BankDefault, Color(0xFF151619), null)
     }
 }
 
@@ -105,12 +113,20 @@ fun BankAvatar(
             .border(1.dp, Color(0xFF42424A), CircleShape),
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = bankInfo.shortNameFa,
-            style = CockpitTypography.labelMedium,
-            fontWeight = FontWeight.Bold,
-            color = Color.White
-        )
+        if (bankInfo.logoRes != null) {
+            Image(
+                painter = painterResource(id = bankInfo.logoRes),
+                contentDescription = bankInfo.nameFa,
+                modifier = Modifier.size(size * 0.62f)
+            )
+        } else {
+            Text(
+                text = bankInfo.shortNameFa,
+                style = CockpitTypography.labelMedium,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+        }
     }
 }
 
@@ -225,12 +241,33 @@ fun IranianBankCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = bankInfo.nameFa,
-                    style = CockpitTypography.titleLarge,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    if (bankInfo.logoRes != null) {
+                        Box(
+                            modifier = Modifier
+                                .size(34.dp)
+                                .clip(CircleShape)
+                                .background(Color.White.copy(alpha = 0.92f))
+                                .padding(5.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                painter = painterResource(id = bankInfo.logoRes),
+                                contentDescription = bankInfo.nameFa,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+                    }
+                    Text(
+                        text = bankInfo.nameFa,
+                        style = CockpitTypography.titleLarge,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
                 EmvChipGraphic()
             }
 
@@ -263,12 +300,22 @@ fun IranianBankCard(
                         color = Color.White
                     )
                 }
-                Text(
-                    text = "شتاب",
-                    style = CockpitTypography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFFD4D4D8)
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_bank_shetab),
+                        contentDescription = "شتاب",
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Text(
+                        text = "شتاب",
+                        style = CockpitTypography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFFD4D4D8)
+                    )
+                }
             }
         }
     }
