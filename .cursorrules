@@ -1,0 +1,5 @@
+# smsGAClient Cursor Rules
+# Complete system prompt is defined in SYSTEM_PROMPT.md.
+
+Read SYSTEM_PROMPT.md and follow all 27 non-negotiable rules, architectural patterns, and refusal conditions.
+Work through tasks defined in .agent/TASKS.md.
