@@ -73,6 +73,22 @@ fun OnboardingScreen(
         currentStep = 4
     }
 
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+    androidx.compose.runtime.DisposableEffect(lifecycleOwner) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+                if (currentStep == 2 && ir.smsgaclient.util.PermissionManager.hasSmsPermissions(context)) {
+                    smsPermissionGranted = true
+                    currentStep = 3
+                }
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -161,6 +177,25 @@ fun OnboardingScreen(
                                 text = "اعطای مجوز پیامک (الزامی)",
                                 color = PureBlack,
                                 fontWeight = FontWeight.Bold
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        OutlinedButton(
+                            onClick = {
+                                ir.smsgaclient.util.PermissionManager.openAppSettings(context)
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp),
+                            shape = RoundedCornerShape(24.dp),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
+                        ) {
+                            Text(
+                                text = "اگر پنجره باز نشد: باز کردن تنظیمات گوشی",
+                                style = CockpitTypography.labelSmall,
+                                color = TextSecondary
                             )
                         }
                     }
