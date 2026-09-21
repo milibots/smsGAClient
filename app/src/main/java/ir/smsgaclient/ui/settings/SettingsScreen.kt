@@ -1,7 +1,9 @@
 package ir.smsgaclient.ui.settings
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,10 +23,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.BatteryChargingFull
+import androidx.compose.material.icons.filled.BrightnessAuto
 import androidx.compose.material.icons.filled.CloudDone
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Key
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -95,6 +101,78 @@ fun SettingsScreen(
                 style = CockpitTypography.headlineMedium,
                 color = TextPrimary
             )
+        }
+
+        item {
+            SettingsCard(
+                icon = Icons.Default.Palette,
+                title = "پوسته و ظاهر برنامه"
+            ) {
+                Text(
+                    text = "حالت نمایشی برنامه را مطابق نیاز خود انتخاب کنید:",
+                    style = CockpitTypography.bodySmall,
+                    color = TextSecondary
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    val themeOptions = listOf(
+                        Triple("SYSTEM", "سیستم", Icons.Default.BrightnessAuto),
+                        Triple("DARK", "تاریک", Icons.Default.DarkMode),
+                        Triple("LIGHT", "روشن", Icons.Default.LightMode)
+                    )
+
+                    themeOptions.forEach { (mode, label, icon) ->
+                        val isSelected = uiState.themeMode == mode
+                        val bgColor by animateColorAsState(
+                            targetValue = if (isSelected) PureWhite else SurfaceElevated,
+                            label = "themeOptionBg"
+                        )
+                        val contentColor by animateColorAsState(
+                            targetValue = if (isSelected) PureBlack else TextPrimary,
+                            label = "themeOptionContent"
+                        )
+
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clip(RoundedCornerShape(16.dp))
+                                .background(bgColor)
+                                .border(
+                                    1.dp,
+                                    if (isSelected) PureWhite else BorderSubtle,
+                                    RoundedCornerShape(16.dp)
+                                )
+                                .clickable {
+                                    viewModel.updateThemeMode(mode)
+                                }
+                                .padding(vertical = 12.dp, horizontal = 8.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Icon(
+                                    imageVector = icon,
+                                    contentDescription = label,
+                                    tint = contentColor,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                                Text(
+                                    text = label,
+                                    style = CockpitTypography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                    color = contentColor
+                                )
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         item {

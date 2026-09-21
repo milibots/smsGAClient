@@ -2,8 +2,8 @@
 <resources>
     <string name="app_name">smsGAClient</string>
     <string name="tab_home">خانه</string>
-    <string name="tab_transactions">تراکنش</string>
-    <string name="tab_cards">کارتها</string>
+    <string name="tab_transactions">تراکنش‌ها</string>
+    <string name="tab_cards">کارت‌ها</string>
     <string name="tab_settings">تنظیمات</string>
 
     <string name="status_connected_forwarding">متصل و در حال ارسال</string>

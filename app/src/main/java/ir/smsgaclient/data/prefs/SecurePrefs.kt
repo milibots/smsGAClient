@@ -5,6 +5,9 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -56,6 +59,16 @@ class SecurePrefs @Inject constructor(
         get() = prefs.getBoolean(KEY_IS_PAIRED, false)
         set(value) = prefs.edit().putBoolean(KEY_IS_PAIRED, value).apply()
 
+    private val _themeModeFlow = MutableStateFlow(prefs.getString(KEY_THEME_MODE, "SYSTEM") ?: "SYSTEM")
+    val themeModeFlow: StateFlow<String> = _themeModeFlow.asStateFlow()
+
+    var themeMode: String
+        get() = prefs.getString(KEY_THEME_MODE, "SYSTEM") ?: "SYSTEM"
+        set(value) {
+            prefs.edit().putString(KEY_THEME_MODE, value).apply()
+            _themeModeFlow.value = value
+        }
+
     val deviceId: String
         get() {
             var id = prefs.getString(KEY_DEVICE_ID, null)
@@ -93,5 +106,6 @@ class SecurePrefs @Inject constructor(
         private const val KEY_MERCHANT_ID = "merchant_id"
         private const val KEY_DEVICE_ID = "device_id"
         private const val KEY_IS_PAIRED = "is_paired"
+        private const val KEY_THEME_MODE = "theme_mode"
     }
 }

@@ -17,7 +17,8 @@ data class SettingsUiState(
     val isPaired: Boolean = false,
     val onlyDeposits: Boolean = true,
     val quietHoursEnabled: Boolean = true,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val themeMode: String = "SYSTEM"
 )
 
 @HiltViewModel
@@ -31,10 +32,16 @@ class SettingsViewModel @Inject constructor(
             apiTokenMasked = securePrefs.mask(securePrefs.apiToken),
             deviceId = securePrefs.deviceId,
             merchantId = securePrefs.merchantId ?: "",
-            isPaired = securePrefs.isPaired
+            isPaired = securePrefs.isPaired,
+            themeMode = securePrefs.themeMode
         )
     )
     val uiState: StateFlow<SettingsUiState> = _uiState
+
+    fun updateThemeMode(mode: String) {
+        securePrefs.themeMode = mode
+        _uiState.value = _uiState.value.copy(themeMode = mode)
+    }
 
     fun updateWebhookUrl(newUrl: String) {
         val isValidProtocol = newUrl.startsWith("https://", ignoreCase = true) ||

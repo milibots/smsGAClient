@@ -1,5 +1,6 @@
 package ir.smsgaclient.ui.theme
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 val StatusConnectedForwarding = Color(0xFFFFFFFF)
@@ -19,41 +20,78 @@ val StatusErrorOnContainer = Color(0xFFA1A1AA)
 val StatusNeutralContainer = Color(0xFF141416)
 val StatusNeutralOnContainer = Color(0xFFD4D4D8)
 
-val PureBlack = Color(0xFF000000)
-val DarkCharcoal = Color(0xFF0A0A0C)
-val CardOnyx = Color(0xFF141416)
-val SurfaceElevatedDark = Color(0xFF1E1E22)
-val BorderMetal = Color(0xFF2E2E34)
-val BorderSubtleLight = Color(0xFF42424A)
+// Absolute colors when literal static white/black is strictly required
+val AbsoluteWhite = Color(0xFFFFFFFF)
+val AbsoluteBlack = Color(0xFF000000)
 
-val PureWhite = Color(0xFFFFFFFF)
-val SilverPlatinum = Color(0xFFE5E5EA)
-val GrayTextSecondary = Color(0xFFA1A1AA)
-val GrayTextMuted = Color(0xFF71717A)
+// Dynamic theme-adaptive color tokens
+val PureWhite: Color
+    @Composable
+    get() = SmsGaTheme.colors.pureWhite
 
-val Navy950 = PureBlack
-val Navy900 = DarkCharcoal
-val Navy800 = CardOnyx
-val Navy750 = SurfaceElevatedDark
-val Navy700 = BorderMetal
-val Navy600 = BorderSubtleLight
+val PureBlack: Color
+    @Composable
+    get() = SmsGaTheme.colors.pureBlack
 
-val TealPrimary = PureWhite
-val TealPrimaryLight = SilverPlatinum
-val TealAccent = PureWhite
-val AmberGold = SilverPlatinum
-val BlueAccent = GrayTextSecondary
+val BackgroundMidnight: Color
+    @Composable
+    get() = SmsGaTheme.colors.backgroundMidnight
 
-val BackgroundMidnight = PureBlack
-val SurfaceDark = DarkCharcoal
-val CardBackground = CardOnyx
-val SurfaceElevated = SurfaceElevatedDark
-val BorderSubtle = BorderMetal
+val SurfaceDark: Color
+    @Composable
+    get() = SmsGaTheme.colors.surfaceDark
 
-val TextPrimary = PureWhite
-val TextSecondary = GrayTextSecondary
-val TextMuted = GrayTextMuted
+val CardBackground: Color
+    @Composable
+    get() = SmsGaTheme.colors.cardBackground
 
+val SurfaceElevated: Color
+    @Composable
+    get() = SmsGaTheme.colors.surfaceElevated
+
+val BorderSubtle: Color
+    @Composable
+    get() = SmsGaTheme.colors.borderSubtle
+
+val TextPrimary: Color
+    @Composable
+    get() = SmsGaTheme.colors.textPrimary
+
+val TextSecondary: Color
+    @Composable
+    get() = SmsGaTheme.colors.textSecondary
+
+val TextMuted: Color
+    @Composable
+    get() = SmsGaTheme.colors.textMuted
+
+val SilverPlatinum: Color
+    @Composable
+    get() = SmsGaTheme.colors.silverPlatinum
+
+val GrayTextSecondary: Color
+    @Composable
+    get() = SmsGaTheme.colors.textSecondary
+
+val GrayTextMuted: Color
+    @Composable
+    get() = SmsGaTheme.colors.textMuted
+
+// Legacy aliases for backward compatibility
+val Navy950: Color @Composable get() = BackgroundMidnight
+val Navy900: Color @Composable get() = SurfaceDark
+val Navy800: Color @Composable get() = CardBackground
+val Navy750: Color @Composable get() = SurfaceElevated
+val Navy700: Color @Composable get() = BorderSubtle
+val Navy600: Color @Composable get() = BorderSubtle
+
+val TealPrimary: Color @Composable get() = PureWhite
+val TealPrimaryLight: Color @Composable get() = SilverPlatinum
+val TealAccent: Color @Composable get() = PureWhite
+val AmberGold: Color @Composable get() = SilverPlatinum
+val BlueAccent: Color @Composable get() = TextSecondary
+
+// Bank Card styling (consistent luxury card appearance)
 val BankBlu = Color(0xFF22252A)
 val BankPasargad = Color(0xFF191A1D)
 val BankSaman = Color(0xFF2A2D33)

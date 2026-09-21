@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">smsGAClient</string>
-    <string name="tab_home">Home</string>
-    <string name="tab_transactions">Transactions</string>
-    <string name="tab_cards">Cards</string>
-    <string name="tab_settings">Settings</string>
+    <string name="tab_home">خانه</string>
+    <string name="tab_transactions">تراکنش‌ها</string>
+    <string name="tab_cards">کارت‌ها</string>
+    <string name="tab_settings">تنظیمات</string>
 
-    <string name="status_connected_forwarding">Connected &amp; forwarding</string>
-    <string name="status_connected_queued">Connected, queued</string>
-    <string name="status_disconnected">Not forwarding</string>
-    <string name="status_not_configured">Not configured</string>
+    <string name="status_connected_forwarding">متصل و در حال ارسال</string>
+    <string name="status_connected_queued">متصل، در صف انتظار</string>
+    <string name="status_disconnected">عدم ارسال</string>
+    <string name="status_not_configured">پیکربندی نشده</string>
 
-    <string name="channel_payments">Payments</string>
-    <string name="channel_service">Background Service</string>
-    <string name="channel_errors">Errors</string>
-    <string name="service_running_desc">SMS monitoring service is running</string>
+    <string name="channel_payments">پرداخت‌ها</string>
+    <string name="channel_service">سرویس پس‌زمینه</string>
+    <string name="channel_errors">خطاها</string>
+    <string name="service_running_desc">سرویس پایش پیامک‌های بانکی در حال اجرا است</string>
 </resources>
