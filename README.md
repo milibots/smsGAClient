@@ -11,6 +11,7 @@
 [![Android](https://img.shields.io/badge/Android-7.0%2B%20(API%2024--35)-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://android.com)
 [![Kotlin](https://img.shields.io/badge/Kotlin-Production-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)](https://kotlinlang.org)
 [![Material 3](https://img.shields.io/badge/Material%203-Persian--First-008080?style=for-the-badge)](https://m3.material.io)
+[![License](https://img.shields.io/badge/License-AGPL--3.0-blue?style=for-the-badge)](LICENSE)
 
 <br/>
 
@@ -22,7 +23,9 @@
 
 ## 📖 معرفی سامانه / Overview
 
-**smsGAClient** یک اپلیکیشن بومی اندروید به زبان کاتلین است که گوشی پذیرنده یا فروشگاه را به یک **درگاه اختصاصی و پایانه هوشمند مدیریت پرداخت کارت‌به‌کارت** تبدیل می‌کند. این برنامه با دریافت پیامک‌های واریزی بانک‌های مختلف ایران، آن‌ها را به صورت آنی تجزیه و اعتبارسنجی کرده و از طریق وب‌هوک امن امضا شده با `HMAC-SHA256` به سرور فروشگاه شما ارسال می‌کند.
+**smsGAClient** یک اپلیکیشن بومی اندروید به زبان کاتلین است که گوشی پذیرنده یا فروشگاه را به یک **درگاه اختصاصی و پایانه هوشمند مدیریت پرداخت کارت‌به‌کارت** تبدیل می‌کند. 
+
+این برنامه با دریافت پیامک‌های واریزی بانک‌های مختلف ایران، آن‌ها را به صورت کاملاً آفلاین و آنی تجزیه کرده و از طریق وب‌هوک امن با امضای دیجیتال `HMAC-SHA256` به سرور فروشگاه، ربات تلگرام یا سامانه شما ارسال می‌کند.
 
 <div align="center">
   <img src="docs/assets/onboarding_illustration.jpg" alt="Instant Bank SMS Detection" width="80%" style="border-radius: 16px;" />
@@ -33,20 +36,169 @@
 ## 🌟 ویژگی‌های کلیدی / Key Features
 
 ### ۱. موتور بریج پس‌زمینه بدون قطعی (The Bridge)
-- **Zero SMS Loss Architecture**: اولویت بالای BroadcastReceiver (`priority = 999`) + سرویس پیش‌زمینه فعال + WorkManager جهت تلاش مجدد هوشمند.
+- **Zero SMS Loss Architecture**: ذخیره بیدرنگ در دیتابیس محلی Room با اولویت بالای گیرنده (`priority = 999`) قبل از هرگونه تلاش شبکه.
 - **معافیت خودکار از بهینه‌سازی باتری (Doze Mode Bypass)**: درخواست مستقیم مجوز فعالیت بدون محدودیت جهت جلوگیری از توقف برنامه در زمان قفل بودن صفحه.
 - **راهنمای شروع خودکار اختصاصی (OEM AutoStart)**: پشتیبانی و انتقال خودکار به تنظیمات گوشی‌های شیائومی (MIUI / HyperOS Autostart)، سامسونگ، هواوی، اوپو و ویوو.
 - **امضای امنیتی HMAC-SHA256**: تمام بسته‌های ارسالی به وب‌هوک دارای امضای رمزنگاری‌شده بر پایه کلید مخفی پذیرنده هستند.
+- **صف آفلاین و تلاش مجدد هوشمند**: ذخیره پیامک‌ها در صورت قطع اینترنت و ارسال متوالی آن‌ها به محض بازگشت شبکه با الگوریتم Exponential Backoff.
 
 ### ۲. داشبورد و کاک‌پیت پذیرنده (The Cockpit)
-- **طراحی متریال ۳ اختصاصی فارسی**: هماهنگ با استانداردهای مدرن فین‌تک، دارک مود واقعی (Midnight OLED) و تایپوگرافی بدون بریدگی حروف.
-- **پایش سقف تراکنش کارت‌ها**: نمایش هوشمند پر شدن سقف روزانه واریز کارت‌ها (۱ میلیارد ریال) همراه با هشدار رنگی زرد (۹۰٪) و قرمز (۱۰۰٪).
+- **تایپوگرافی اصیل با فونت وزیرمتن (Vazirmatn)**: در ۵ وزن استاندارد جهت نمایش بی‌نقص و بدون بریدگی اعداد فارسی، مبالغ و حروف خاص (گ، ژ، پ، چ، ی).
+- **باتم‌شیت‌های روان متریال ۳ (Modal Bottom Sheets)**: فرم‌های مدرن افزودن کارت، لغو اتصال و راه‌اندازی پس‌زمینه با گوشه‌های ۳۲dp و دستگیره لمسی.
+- **پایش سقف تراکنش کارت‌ها و چرخش خودکار**: نمایش هوشمند پر شدن سقف روزانه واریز کارت‌ها (۱ میلیارد ریال) همراه با هشدار رنگی زرد (۹۰٪) و قرمز (۱۰۰٪).
 - **رسید دیجیتال بانکی**: نمایش تراکنش‌ها در قالب رسید حرارتی خوانا با قابلیت کپی سریع شماره پیگیری و شماره کارت.
 - **گاوصندوق سخت‌افزاری**: ذخیره امن آدرس وب‌هوک و کلیدهای ارتباطی با رمزنگاری `AES256-GCM` متصل به Android Keystore.
 
 ---
 
+## 💻 راهنمای توسعه‌دهندگان و اتصال به وب‌هوک (Developer Guide)
+
+اگر مدیر فنی یا برنامه‌نویس هستید، می‌توانید با استفاده از فریم‌ورک‌های مدرن نظیر **FastAPI (Python)** وب‌هوک‌های ارسالی از گوشی را دریافت، اعتبارسنجی و سفارش‌های مشتریان را خودکار تایید کنید.
+
+### گردش‌کار سیستم (End-to-End Payment Flow)
+
+```
+[مشتری در سایت / ربات تلگرام]
+      │ ۱. درخواست خرید (مبلغ پایه: ۵۰٬۰۰۰ تومان)
+      ▼
+[سرور شما (FastAPI)] ────── اختصاص کارت فعال و مبلغ یکتا (مثلاً ۵۰٬۰۳۴ تومان)
+      │
+      ▼
+[مشتری کارت‌به‌کارت می‌کند]
+      │
+      ▼
+[بانک (ملت، بلو، صادرات و...)]
+      │ ارسال پیامک واریز به گوشی فروشنده
+      ▼
+[اپلیکیشن smsGAClient (روی گوشی)]
+      │ ۲. دریافت آنی + استخراج مبلغ، ۴ رقم آخر کارت، نام بانک
+      │ ۳. امضای امنیتی هدر با کلید سری HMAC-SHA256
+      │ ۴. ارسال وب‌هوک POST به سرور شما
+      ▼
+[وب‌هوک سرور شما]
+      │ ۵. تایید امضای HMAC + بررسی عدم تکراری بودن (Idempotency)
+      │ ۶. انطباق تراکنش با سفارش مشتری (بر اساس مبلغ و زمان)
+      │ ۷. تغییر وضعیت سفارش به «پرداخت شده» و تحویل سفارش
+```
+
+### مشخصات درخواست وب‌هوک (Webhook Contract)
+
+- **Method**: `POST`
+- **URL**: آدرس HTTPS اختصاصی شما (مثلاً `https://api.yourshop.ir/webhook/sms-deposit`)
+- **Headers**:
+  ```http
+  Content-Type: application/json
+  Authorization: Bearer <api_token>
+  X-SmsGA-Signature: hmac-sha256=<hex_digest>
+  X-SmsGA-Device: <device_uuid>
+  X-SmsGA-Timestamp: <unix_seconds>
+  User-Agent: smsGAClient/1.0.3 (Android <sdk>)
+  ```
+
+- **فرمول امضا**:
+  ```text
+  signature = HMAC_SHA256(hmac_secret, "<timestamp>.<raw_body_bytes>")
+  ```
+
+- **نمونه بدنه داده ارسالی (JSON Payload)**:
+  ```json
+  {
+    "event": "sms.deposit",
+    "message_id": "sha256:abc123456789...",
+    "device_id": "a1b2c3d4-e5f6-4a1b-8c2d-1234567890ab",
+    "merchant_id": "m_8821",
+    "received_at": "2026-09-21T14:32:11+03:30",
+    "bank": "blu",
+    "type": "deposit",
+    "amount_rial": 4500280,
+    "amount_toman": 450028,
+    "card_last4": "1234",
+    "balance_rial": 125000000,
+    "raw_sms": "+۴٬۵۰۰٬۲۸۰ ریال — بلو",
+    "parse_version": 41
+  }
+  ```
+
+### نمونه پیاده‌سازی سرور وب‌هوک با FastAPI
+
+```python
+import hmac
+import hashlib
+import time
+from typing import Optional
+from fastapi import FastAPI, Header, HTTPException, Request, status, Depends
+from pydantic import BaseModel
+
+app = FastAPI(title="smsGA Webhook Receiver")
+
+MERCHANT_CONFIG = {
+    "api_token": "smsga_token_secret_123456",
+    "hmac_secret": "smsga_hmac_secret_abcdef"
+}
+
+PROCESSED_MESSAGES = set()
+
+class SmsPayload(BaseModel):
+    event: str
+    message_id: str
+    device_id: str
+    bank: str
+    type: str
+    amount_toman: Optional[int] = None
+    card_last4: Optional[str] = None
+    raw_sms: str
+
+async def verify_smsga_signature(
+    request: Request,
+    authorization: Optional[str] = Header(None),
+    x_smsga_signature: Optional[str] = Header(None),
+    x_smsga_timestamp: Optional[int] = Header(None)
+):
+    # ۱. اعتبارسنجی Bearer Token
+    if not authorization or authorization != f"Bearer {MERCHANT_CONFIG['api_token']}":
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+
+    # ۲. جلوگیری از Replay Attack (اختلاف زمان کمتر از ۵ دقیقه)
+    if not x_smsga_timestamp or abs(time.time() - x_smsga_timestamp) > 300:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Timestamp expired")
+
+    # ۳. تایید امضای HMAC-SHA256
+    raw_body = await request.body()
+    payload_to_sign = f"{x_smsga_timestamp}.".encode("utf-8") + raw_body
+    expected_sig = hmac.new(
+        MERCHANT_CONFIG["hmac_secret"].encode("utf-8"),
+        payload_to_sign,
+        hashlib.sha256
+    ).hexdigest()
+
+    client_sig = (x_smsga_signature or "").replace("hmac-sha256=", "").strip()
+    if not hmac.compare_digest(expected_sig, client_sig):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Signature mismatch")
+
+@app.post("/webhook/sms-deposit")
+async def receive_sms(payload: SmsPayload, _auth=Depends(verify_smsga_signature)):
+    # تایید تست اتصال در اپلیکیشن
+    if payload.event == "test":
+        return {"status": "ok", "message": "Connection test verified successfully"}
+
+    # پیشگیری از دوبار پردازش پیامک (Idempotency)
+    if payload.message_id in PROCESSED_MESSAGES:
+        return {"status": "duplicate", "message": "Already processed"}
+
+    if payload.type == "deposit" and payload.amount_toman:
+        # جستجو در سفارش‌های معلق بر اساس مبلغ و ۴ رقم کارت
+        PROCESSED_MESSAGES.add(payload.message_id)
+        # TODO: علامت‌گذاری فاکتور به عنوان پرداخت شده در دیتابیس
+        return {"status": "success", "amount_toman": payload.amount_toman}
+
+    return {"status": "ignored"}
+```
+
+---
+
 ## 🏦 بانک‌های تحت پوشش / Supported Banks
+
+الگوهای پیامکی به صورت مجزا در دایرکتوری [`banks/`](banks/) نگهداری می‌شوند:
 
 | بانک | نماد | پشتیبانی واریز / برداشت | استخراج مانده و پیگیری | فایل الگو |
 | :--- | :---: | :---: | :---: | :---: |
@@ -67,28 +219,28 @@
 | **پست بانک ایران (Post Bank)** | 🟢 | ✅ | ✅ | [`banks/postbank.json`](banks/postbank.json) |
 
 > 🤝 **مشارکت همگانی و افزودن بانک جدید**:
-> کلیه فرمت‌های پیامک بانکی به تفکیک در پوشه [`banks/`](banks/) قرار دارند. جهت اضافه کردن بانک جدید یا به‌روزرسانی رجکس‌های موجود، کافیست یک فایل JSON جدید اضافه کرده و **Pull Request (PR)** ارسال فرمایید! برای مشاهده توضیحات کامل، به [راهنمای مشارکت الگوها (`banks/README.md`)](banks/README.md) مراجعه کنید.
+> برای ثبت یا تصحیح فرمت پیامک هر بانک کافیست فایل JSON مربوطه را ویرایش یا اضافه کرده و **Pull Request** دهید. توضیحات کامل در [راهنمای الگوها (`banks/README.md`)](banks/README.md).
 
 ---
 
-## 📦 دانلود نسخه‌های نصبی / Download APKs
+## 📦 دانلود نسخه‌های نصبی / Download APKs (v1.0.3)
 
-تمامی فایل‌های نصبی زیر با معماری تفکیک شده (ABI Splits)، بدون کدهای اضافه و بهینه شده با موتور R8 آماده نصب مستقیم روی گوشی هستند:
+تمامی فایل‌های نصبی زیر امضا شده با گواهی تولید، دارای بهینه‌سازی کامل R8 و فونت‌های فارسی بومی هستند:
 
 | نوع پردازنده / معماری | فایل نصبی | حجم | لینک دانلود مستقیم |
 | :--- | :--- | :---: | :---: |
-| **ARM 64-bit (گوشی‌های جدید)** | `app-prod-arm64-v8a-release.apk` | **1.57 MB** | [دانلود نسخه ARM64](https://github.com/milibots/smsGAClient/releases/latest/download/app-prod-arm64-v8a-release.apk) |
-| **ARM 32-bit (گوشی‌های قدیمی و پوز)** | `app-prod-armeabi-v7a-release.apk` | **1.57 MB** | [دانلود نسخه ARMv7a](https://github.com/milibots/smsGAClient/releases/latest/download/app-prod-armeabi-v7a-release.apk) |
-| **یونیورسال (همه‌کاره برای تمامی گوشی‌ها)** | `app-prod-universal-release.apk` | **1.62 MB** | [دانلود نسخه یونیورسال](https://github.com/milibots/smsGAClient/releases/latest/download/app-prod-universal-release.apk) |
-| **x86_64 (شبیه‌ساز کامپیوتر)** | `app-prod-x86_64-release.apk` | **1.57 MB** | [دانلود نسخه x86_64](https://github.com/milibots/smsGAClient/releases/latest/download/app-prod-x86_64-release.apk) |
-| **x86 (شبیه‌ساز ۳۲ بیتی)** | `app-prod-x86-release.apk` | **1.57 MB** | [دانلود نسخه x86](https://github.com/milibots/smsGAClient/releases/latest/download/app-prod-x86-release.apk) |
+| **ARM 64-bit (اکثر گوشی‌های مدرن)** | `app-prod-arm64-v8a-release.apk` | **1.99 MB** | [دانلود نسخه ARM64](https://github.com/milibots/smsGAClient/releases/latest/download/app-prod-arm64-v8a-release.apk) |
+| **ARM 32-bit (گوشی‌های قدیمی و پوز)** | `app-prod-armeabi-v7a-release.apk` | **1.99 MB** | [دانلود نسخه ARMv7a](https://github.com/milibots/smsGAClient/releases/latest/download/app-prod-armeabi-v7a-release.apk) |
+| **یونیورسال (همه‌کاره برای تمامی گوشی‌ها)** | `app-prod-universal-release.apk` | **2.05 MB** | [دانلود نسخه یونیورسال](https://github.com/milibots/smsGAClient/releases/latest/download/app-prod-universal-release.apk) |
+| **x86_64 (شبیه‌ساز کامپیوتر ۶۴ بیتی)** | `app-prod-x86_64-release.apk` | **2.00 MB** | [دانلود نسخه x86_64](https://github.com/milibots/smsGAClient/releases/latest/download/app-prod-x86_64-release.apk) |
+| **x86 (شبیه‌ساز ۳۲ بیتی)** | `app-prod-x86-release.apk` | **1.99 MB** | [دانلود نسخه x86](https://github.com/milibots/smsGAClient/releases/latest/download/app-prod-x86-release.apk) |
 
 ---
 
 ## 🔒 امنیت و حریم خصوصی / Security & Privacy
-- 🚫 **بدون هیچ‌گونه تبلیغات یا ابزار ردیابی**: فاقد گوگل فایربیس، آنالیتیکس یا هرگونه کتابخانه متفرقه.
-- 🚫 **عدم دسترسی به ارسال پیامک**: برنامه تنها مجوز `RECEIVE_SMS` و `READ_SMS` را دارد و از نظر سیستمی امکان ارسال پیامک یا ایجاد هزینه ندارد.
-- 🔐 **دیتابیس رمزنگاری شده آفلاین**: کلیه لاگ‌ها و رکوردهای تراکنش به صورت محلی در پایگاه داده SQLite دستگاه پذیرنده ذخیره می‌شوند.
+- 🚫 **فاقد ابزارهای ردیابی و تبلیغات**: بدون Firebase، Analytics یا ابزارهای مانیتورینگ خارجی.
+- 🚫 **عدم دسترسی به ارسال پیامک**: برنامه تنها مجوز خواندن پیامک (`RECEIVE_SMS` و `READ_SMS`) دارد و فاقد هرگونه مجوز ارسال است.
+- 🔐 **پایگاه داده رمزنگاری شده آفلاین**: کلیه اطلاعات و تراکنش‌ها فقط در حافظه رم و پایگاه داده دستگاه شما باقی می‌ماند.
 
 ---
 
@@ -99,9 +251,17 @@
 git clone https://github.com/milibots/smsGAClient.git
 cd smsGAClient
 
-# اجرای تست‌های خودکار
-./gradlew testDevDebugUnitTest
+# اجرای تمامی تست‌های خودکار
+./gradlew test
 
-# ساخت خروجی نهایی ریلیز
+# ساخت پکیج‌های نهایی پروداکشن
 ./gradlew assembleProdRelease
 ```
+
+---
+
+## 📄 مستندات تکمیلی / Documentation
+- [نمای کلی سیستم (`docs/00_OVERVIEW.md`)](docs/00_OVERVIEW.md)
+- [قرارداد وب‌هوک و API (`docs/API_CONTRACT.md`)](docs/API_CONTRACT.md)
+- [تاریخچه تغییرات (`docs/CHANGELOG.md`)](docs/CHANGELOG.md)
+- [یادداشت‌های انتشار نسخه ۱.۰.۳ (`docs/RELEASE_NOTES_v1.0.3.md`)](docs/RELEASE_NOTES_v1.0.3.md)
