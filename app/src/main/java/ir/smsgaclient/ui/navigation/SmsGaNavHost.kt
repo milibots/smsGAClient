@@ -53,6 +53,7 @@ fun SmsGaNavHost(
                 )
             }
         },
+        containerColor = ir.smsgaclient.ui.theme.BackgroundMidnight,
         modifier = modifier
     ) { paddingValues ->
         NavHost(

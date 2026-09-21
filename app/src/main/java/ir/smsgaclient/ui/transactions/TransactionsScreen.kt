@@ -1,7 +1,6 @@
 package ir.smsgaclient.ui.transactions
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -49,11 +48,9 @@ import ir.smsgaclient.ui.theme.BackgroundMidnight
 import ir.smsgaclient.ui.theme.BorderSubtle
 import ir.smsgaclient.ui.theme.CardBackground
 import ir.smsgaclient.ui.theme.CockpitTypography
-import ir.smsgaclient.ui.theme.Navy700
-import ir.smsgaclient.ui.theme.Navy800
+import ir.smsgaclient.ui.theme.PureBlack
+import ir.smsgaclient.ui.theme.PureWhite
 import ir.smsgaclient.ui.theme.SurfaceElevated
-import ir.smsgaclient.ui.theme.TealAccent
-import ir.smsgaclient.ui.theme.TealPrimary
 import ir.smsgaclient.ui.theme.TextMuted
 import ir.smsgaclient.ui.theme.TextPrimary
 import ir.smsgaclient.ui.theme.TextSecondary
@@ -71,7 +68,7 @@ fun TransactionsScreen(
         modifier = modifier
             .fillMaxSize()
             .background(BackgroundMidnight)
-            .padding(16.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
 
         Row(
@@ -86,14 +83,14 @@ fun TransactionsScreen(
             )
             Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
+                    .clip(RoundedCornerShape(18.dp))
                     .background(SurfaceElevated)
-                    .padding(horizontal = 10.dp, vertical = 4.dp)
+                    .padding(horizontal = 12.dp, vertical = 6.dp)
             ) {
                 Text(
                     text = "${PersianNumberFormatter.toPersianDigits(uiState.filteredTransactions.size.toString())} تراکنش",
                     style = CockpitTypography.labelMedium,
-                    color = TealAccent
+                    color = PureWhite
                 )
             }
         }
@@ -123,11 +120,11 @@ fun TransactionsScreen(
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(14.dp),
+            shape = RoundedCornerShape(22.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = CardBackground,
                 unfocusedContainerColor = CardBackground,
-                focusedBorderColor = TealPrimary,
+                focusedBorderColor = PureWhite,
                 unfocusedBorderColor = BorderSubtle,
                 focusedTextColor = TextPrimary,
                 unfocusedTextColor = TextPrimary
@@ -145,17 +142,18 @@ fun TransactionsScreen(
                 FilterChip(
                     selected = isSelected,
                     onClick = { viewModel.onFilterSelected(filter) },
+                    shape = RoundedCornerShape(20.dp),
                     label = { Text(text = filter.titleFa) },
                     colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = TealPrimary,
-                        selectedLabelColor = TextPrimary,
-                        containerColor = Navy800,
+                        selectedContainerColor = PureWhite,
+                        selectedLabelColor = PureBlack,
+                        containerColor = SurfaceElevated,
                         labelColor = TextSecondary
                     ),
                     border = FilterChipDefaults.filterChipBorder(
                         enabled = true,
                         selected = isSelected,
-                        borderColor = if (isSelected) TealPrimary else BorderSubtle
+                        borderColor = if (isSelected) PureWhite else BorderSubtle
                     )
                 )
             }
@@ -166,7 +164,7 @@ fun TransactionsScreen(
         if (uiState.filteredTransactions.isEmpty()) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(28.dp),
                 colors = CardDefaults.cardColors(containerColor = CardBackground),
                 border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
             ) {
@@ -179,7 +177,7 @@ fun TransactionsScreen(
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(52.dp)
+                            .size(56.dp)
                             .clip(CircleShape)
                             .background(SurfaceElevated),
                         contentAlignment = Alignment.Center
@@ -188,10 +186,10 @@ fun TransactionsScreen(
                             imageVector = Icons.AutoMirrored.Filled.ReceiptLong,
                             contentDescription = null,
                             tint = TextMuted,
-                            modifier = Modifier.size(26.dp)
+                            modifier = Modifier.size(28.dp)
                         )
                     }
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(14.dp))
                     Text(
                         text = "تراکنشی مطابق با فیلتر یافت نشد",
                         style = CockpitTypography.titleMedium,
@@ -207,9 +205,13 @@ fun TransactionsScreen(
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(
                             onClick = { viewModel.onSearchQueryChanged("") },
-                            colors = ButtonDefaults.buttonColors(containerColor = SurfaceElevated)
+                            shape = RoundedCornerShape(20.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = PureWhite,
+                                contentColor = PureBlack
+                            )
                         ) {
-                            Text(text = "پاک کردن جستجو", color = TealAccent)
+                            Text(text = "پاک کردن جستجو", color = PureBlack, fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -244,22 +246,22 @@ fun TransactionItemRow(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(containerColor = CardBackground),
         border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(14.dp),
+                .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(14.dp)
             ) {
-                BankAvatar(bankId = transaction.bankId, size = 42.dp)
+                BankAvatar(bankId = transaction.bankId, size = 44.dp)
                 Column {
                     Text(
                         text = bankInfo.nameFa,
@@ -280,7 +282,7 @@ fun TransactionItemRow(
                     text = "+ ${PersianNumberFormatter.formatToman(transaction.amountRial / 10)}",
                     style = CockpitTypography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = TealAccent
+                    color = PureWhite
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 StatusPill(status = transaction.status)
@@ -288,4 +290,3 @@ fun TransactionItemRow(
         }
     }
 }
-

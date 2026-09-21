@@ -1,0 +1,54 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <path
+        android:pathData="M24,12 L96,12 A16,16 0 0,1 112,28 L112,92 A16,16 0 0,1 96,108 L24,108 A16,16 0 0,1 8,92 L8,28 A16,16 0 0,1 24,12 Z"
+        android:strokeWidth="1.5"
+        android:strokeColor="#3A3A42">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="10"
+                android:startY="10"
+                android:endX="110"
+                android:endY="110">
+                <item android:offset="0.0" android:color="#1F1F24" />
+                <item android:offset="0.6" android:color="#121214" />
+                <item android:offset="1.0" android:color="#080809" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <path
+        android:pathData="M20,32 L100,32 A10,10 0 0,1 110,42 L110,78 A10,10 0 0,1 100,88 L20,88 A10,10 0 0,1 10,78 L10,42 A10,10 0 0,1 20,32 Z"
+        android:strokeWidth="1.8"
+        android:strokeColor="#FFFFFF"
+        android:fillColor="#00000000" />
+
+    <path
+        android:pathData="M24,48 L46,48 A4,4 0 0,1 50,52 L50,68 A4,4 0 0,1 46,72 L24,72 A4,4 0 0,1 20,68 L20,52 A4,4 0 0,1 24,48 Z"
+        android:strokeWidth="1"
+        android:strokeColor="#8E8E93"
+        android:fillColor="#E5E5EA" />
+
+    <path
+        android:pathData="M28,54 L42,54 M28,60 L42,60 M28,66 L36,66"
+        android:strokeWidth="1"
+        android:strokeColor="#8E8E93" />
+
+    <path
+        android:pathData="M60,60 L70,60 L76,46 L84,74 L90,56 L96,60 L102,60"
+        android:strokeWidth="2.5"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <path
+        android:pathData="M78,24 L82,24 A2,2 0 0,1 84,26 L84,28 A2,2 0 0,1 82,30 L78,30 A2,2 0 0,1 76,28 L76,26 A2,2 0 0,1 78,24 Z"
+        android:fillColor="#FFFFFF" />
+
+</vector>

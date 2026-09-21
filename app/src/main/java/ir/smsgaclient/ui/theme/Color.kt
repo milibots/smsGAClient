@@ -2,57 +2,69 @@ package ir.smsgaclient.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val StatusConnectedForwarding = Color(0xFF10B981)
-val StatusConnectedQueued = Color(0xFFF59E0B)
-val StatusNotForwarding = Color(0xFFEF4444)
-val StatusNotConfigured = Color(0xFF64748B)
+val StatusConnectedForwarding = Color(0xFFFFFFFF)
+val StatusConnectedQueued = Color(0xFFD4D4D8)
+val StatusNotForwarding = Color(0xFF71717A)
+val StatusNotConfigured = Color(0xFF52525B)
 
-val StatusForwardingContainer = Color(0xFF064E3B)
-val StatusForwardingOnContainer = Color(0xFFA7F3D0)
+val StatusForwardingContainer = Color(0xFF27272A)
+val StatusForwardingOnContainer = Color(0xFFFFFFFF)
 
-val StatusQueuedContainer = Color(0xFF78350F)
-val StatusQueuedOnContainer = Color(0xFFFDE68A)
+val StatusQueuedContainer = Color(0xFF1F1F23)
+val StatusQueuedOnContainer = Color(0xFFE4E4E7)
 
-val StatusErrorContainer = Color(0xFF7F1D1D)
-val StatusErrorOnContainer = Color(0xFFFECACA)
+val StatusErrorContainer = Color(0xFF18181B)
+val StatusErrorOnContainer = Color(0xFFA1A1AA)
 
-val StatusNeutralContainer = Color(0xFF1E293B)
-val StatusNeutralOnContainer = Color(0xFFCBD5E1)
+val StatusNeutralContainer = Color(0xFF141416)
+val StatusNeutralOnContainer = Color(0xFFD4D4D8)
 
-val Navy950 = Color(0xFF0A0F1D)
-val Navy900 = Color(0xFF0F172A)
-val Navy800 = Color(0xFF162032)
-val Navy750 = Color(0xFF1E2B42)
-val Navy700 = Color(0xFF28354A)
-val Navy600 = Color(0xFF334155)
+val PureBlack = Color(0xFF000000)
+val DarkCharcoal = Color(0xFF0A0A0C)
+val CardOnyx = Color(0xFF141416)
+val SurfaceElevatedDark = Color(0xFF1E1E22)
+val BorderMetal = Color(0xFF2E2E34)
+val BorderSubtleLight = Color(0xFF42424A)
 
-val TealPrimary = Color(0xFF0D9488)
-val TealPrimaryLight = Color(0xFF14B8A6)
-val TealAccent = Color(0xFF2DD4BF)
-val AmberGold = Color(0xFFF59E0B)
-val BlueAccent = Color(0xFF2563EB)
+val PureWhite = Color(0xFFFFFFFF)
+val SilverPlatinum = Color(0xFFE5E5EA)
+val GrayTextSecondary = Color(0xFFA1A1AA)
+val GrayTextMuted = Color(0xFF71717A)
 
-val BackgroundMidnight = Navy950
-val SurfaceDark = Navy900
-val CardBackground = Navy800
-val SurfaceElevated = Navy750
-val BorderSubtle = Navy700
+val Navy950 = PureBlack
+val Navy900 = DarkCharcoal
+val Navy800 = CardOnyx
+val Navy750 = SurfaceElevatedDark
+val Navy700 = BorderMetal
+val Navy600 = BorderSubtleLight
 
-val TextPrimary = Color(0xFFF8FAFC)
-val TextSecondary = Color(0xFF94A3B8)
-val TextMuted = Color(0xFF64748B)
+val TealPrimary = PureWhite
+val TealPrimaryLight = SilverPlatinum
+val TealAccent = PureWhite
+val AmberGold = SilverPlatinum
+val BlueAccent = GrayTextSecondary
 
-val BankBlu = Color(0xFF00A3FF)
-val BankPasargad = Color(0xFFD4AF37)
-val BankSaman = Color(0xFF1877F2)
-val BankMellat = Color(0xFFE11D48)
-val BankMelli = Color(0xFF0B5B8A)
-val BankSepah = Color(0xFFD97706)
-val BankTejarat = Color(0xFF0284C7)
-val BankKeshavarzi = Color(0xFF16A34A)
-val BankParsian = Color(0xFF831843)
-val BankRefah = Color(0xFF059669)
-val BankShahr = Color(0xFFDC2626)
-val BankSaderat = Color(0xFF1E3A8A)
-val BankAyandeh = Color(0xFF9333EA)
-val BankDefault = Color(0xFF475569)
+val BackgroundMidnight = PureBlack
+val SurfaceDark = DarkCharcoal
+val CardBackground = CardOnyx
+val SurfaceElevated = SurfaceElevatedDark
+val BorderSubtle = BorderMetal
+
+val TextPrimary = PureWhite
+val TextSecondary = GrayTextSecondary
+val TextMuted = GrayTextMuted
+
+val BankBlu = Color(0xFF22252A)
+val BankPasargad = Color(0xFF191A1D)
+val BankSaman = Color(0xFF2A2D33)
+val BankMellat = Color(0xFF1E2024)
+val BankMelli = Color(0xFF17181B)
+val BankSepah = Color(0xFF24262C)
+val BankTejarat = Color(0xFF202328)
+val BankKeshavarzi = Color(0xFF1B1D21)
+val BankParsian = Color(0xFF282A30)
+val BankRefah = Color(0xFF181A1E)
+val BankShahr = Color(0xFF26282E)
+val BankSaderat = Color(0xFF1A1C20)
+val BankAyandeh = Color(0xFF25272D)
+val BankDefault = Color(0xFF1F2126)

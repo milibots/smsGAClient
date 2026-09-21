@@ -72,7 +72,7 @@ fun BridgeStatusBar(
 
     val pulseScale by transition.animateFloat(
         initialValue = 1f,
-        targetValue = if (isPulsing) 1.7f else 1f,
+        targetValue = if (isPulsing) 1.8f else 1f,
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 1200, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Restart
@@ -81,7 +81,7 @@ fun BridgeStatusBar(
     )
 
     val pulseAlpha by transition.animateFloat(
-        initialValue = if (isPulsing) 0.6f else 0f,
+        initialValue = if (isPulsing) 0.5f else 0f,
         targetValue = 0f,
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 1200, easing = FastOutSlowInEasing),
@@ -93,23 +93,22 @@ fun BridgeStatusBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 52.dp)
-            .clip(RoundedCornerShape(14.dp))
+            .heightIn(min = 54.dp)
+            .clip(RoundedCornerShape(24.dp))
             .background(CardBackground)
-            .border(1.dp, BorderSubtle, RoundedCornerShape(14.dp))
-            .padding(horizontal = 16.dp, vertical = 10.dp),
+            .border(1.dp, BorderSubtle, RoundedCornerShape(24.dp))
+            .padding(horizontal = 18.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-
         Box(
-            modifier = Modifier.size(20.dp),
+            modifier = Modifier.size(22.dp),
             contentAlignment = Alignment.Center
         ) {
             if (isPulsing) {
                 Box(
                     modifier = Modifier
-                        .size(14.dp)
+                        .size(16.dp)
                         .graphicsLayer {
                             scaleX = pulseScale
                             scaleY = pulseScale
@@ -141,4 +140,3 @@ fun BridgeStatusBar(
         }
     }
 }
-

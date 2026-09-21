@@ -5,7 +5,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -53,10 +51,10 @@ import ir.smsgaclient.ui.theme.CardBackground
 import ir.smsgaclient.ui.theme.CodeSnippetStyle
 import ir.smsgaclient.ui.theme.CockpitTypography
 import ir.smsgaclient.ui.theme.CurrencyUnitStyle
-import ir.smsgaclient.ui.theme.Navy800
+import ir.smsgaclient.ui.theme.PureBlack
+import ir.smsgaclient.ui.theme.PureWhite
+import ir.smsgaclient.ui.theme.SilverPlatinum
 import ir.smsgaclient.ui.theme.SurfaceElevated
-import ir.smsgaclient.ui.theme.TealAccent
-import ir.smsgaclient.ui.theme.TealPrimary
 import ir.smsgaclient.ui.theme.TextMuted
 import ir.smsgaclient.ui.theme.TextPrimary
 import ir.smsgaclient.ui.theme.TextSecondary
@@ -77,7 +75,7 @@ fun TransactionDetailScreen(
         modifier = modifier
             .fillMaxSize()
             .background(BackgroundMidnight)
-            .padding(16.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
 
         Row(
@@ -118,25 +116,25 @@ fun TransactionDetailScreen(
 
         LazyColumn(
             modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(20.dp),
+                    shape = RoundedCornerShape(32.dp),
                     colors = CardDefaults.cardColors(containerColor = CardBackground),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
+                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF383842))
                 ) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
                                 Brush.linearGradient(
-                                    listOf(Navy800, Color(0xFF132F3D), Navy800)
+                                    listOf(Color(0xFF222226), Color(0xFF141416), Color(0xFF0C0C0E))
                                 )
                             )
-                            .padding(22.dp)
+                            .padding(24.dp)
                     ) {
                         Column {
                             Row(
@@ -152,7 +150,7 @@ fun TransactionDetailScreen(
                                 StatusPill(status = transaction.status)
                             }
 
-                            Spacer(modifier = Modifier.height(10.dp))
+                            Spacer(modifier = Modifier.height(12.dp))
 
                             Row(
                                 verticalAlignment = Alignment.Bottom,
@@ -160,14 +158,14 @@ fun TransactionDetailScreen(
                             ) {
                                 Text(
                                     text = "+ ${PersianNumberFormatter.formatNumber(transaction.amountRial / 10)}",
-                                    style = CockpitTypography.headlineLarge.copy(fontSize = 32.sp),
+                                    style = CockpitTypography.headlineLarge.copy(fontSize = 34.sp),
                                     fontWeight = FontWeight.Bold,
-                                    color = TealAccent
+                                    color = PureWhite
                                 )
                                 Text(
                                     text = "تومان",
                                     style = CurrencyUnitStyle.copy(fontSize = 16.sp),
-                                    color = TealAccent,
+                                    color = SilverPlatinum,
                                     modifier = Modifier.padding(bottom = 6.dp)
                                 )
                             }
@@ -185,11 +183,11 @@ fun TransactionDetailScreen(
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(18.dp),
+                    shape = RoundedCornerShape(26.dp),
                     colors = CardDefaults.cardColors(containerColor = CardBackground),
                     border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
                 ) {
-                    Column(modifier = Modifier.padding(18.dp)) {
+                    Column(modifier = Modifier.padding(20.dp)) {
                         Text(
                             text = "مشخصات بانکی واریز",
                             style = CockpitTypography.titleMedium,
@@ -201,7 +199,7 @@ fun TransactionDetailScreen(
                         DetailRow(
                             label = "بانک مبدا / مقصد",
                             value = bankInfo.nameFa,
-                            leadingAvatar = { BankAvatar(bankId = transaction.bankId, size = 28.dp) }
+                            leadingAvatar = { BankAvatar(bankId = transaction.bankId, size = 30.dp) }
                         )
 
                         val cardText = transaction.cardLast4?.let { "•••• ${PersianNumberFormatter.toPersianDigits(it)}" } ?: "نامشخص"
@@ -229,7 +227,7 @@ fun TransactionDetailScreen(
                                     Icon(
                                         imageVector = Icons.Default.ContentCopy,
                                         contentDescription = "کپی",
-                                        tint = TealAccent,
+                                        tint = PureWhite,
                                         modifier = Modifier.size(16.dp)
                                     )
                                 }
@@ -242,11 +240,11 @@ fun TransactionDetailScreen(
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(18.dp),
+                    shape = RoundedCornerShape(26.dp),
                     colors = CardDefaults.cardColors(containerColor = CardBackground),
                     border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
                 ) {
-                    Column(modifier = Modifier.padding(18.dp)) {
+                    Column(modifier = Modifier.padding(20.dp)) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -277,15 +275,14 @@ fun TransactionDetailScreen(
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(10.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
 
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(10.dp))
+                                .clip(RoundedCornerShape(18.dp))
                                 .background(SurfaceElevated)
-                                .border(1.dp, BorderSubtle, RoundedCornerShape(10.dp))
-                                .padding(12.dp)
+                                .padding(14.dp)
                         ) {
                             Text(
                                 text = rawSms?.body ?: "پیامک خام در دیتابیس ثبت نشده است",
@@ -301,25 +298,28 @@ fun TransactionDetailScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 12.dp),
+                .padding(top = 14.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Button(
                 onClick = { onRetryForward(transaction.messageId) },
                 modifier = Modifier
                     .weight(1f)
-                    .height(48.dp),
-                shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = TealPrimary)
+                    .height(50.dp),
+                shape = RoundedCornerShape(25.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = PureWhite,
+                    contentColor = PureBlack
+                )
             ) {
                 Icon(
                     imageVector = Icons.Default.Refresh,
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = PureBlack,
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.size(8.dp))
-                Text(text = "ارسال مجدد به وب‌هوک", color = Color.White)
+                Text(text = "ارسال مجدد به وب‌هوک", color = PureBlack, fontWeight = FontWeight.Bold)
             }
 
             OutlinedButton(
@@ -328,8 +328,8 @@ fun TransactionDetailScreen(
                 },
                 modifier = Modifier
                     .weight(1f)
-                    .height(48.dp),
-                shape = RoundedCornerShape(12.dp),
+                    .height(50.dp),
+                shape = RoundedCornerShape(25.dp),
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = TextSecondary),
                 border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
             ) {
@@ -349,7 +349,7 @@ fun DetailRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 10.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -372,4 +372,3 @@ fun DetailRow(
         }
     }
 }
-

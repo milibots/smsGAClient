@@ -22,8 +22,6 @@ import androidx.compose.material.icons.filled.CloudDone
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.PhoneAndroid
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -55,13 +53,12 @@ import ir.smsgaclient.ui.theme.BorderSubtle
 import ir.smsgaclient.ui.theme.CardBackground
 import ir.smsgaclient.ui.theme.CodeSnippetStyle
 import ir.smsgaclient.ui.theme.CockpitTypography
-import ir.smsgaclient.ui.theme.Navy700
-import ir.smsgaclient.ui.theme.Navy800
+import ir.smsgaclient.ui.theme.PureBlack
+import ir.smsgaclient.ui.theme.PureWhite
+import ir.smsgaclient.ui.theme.SilverPlatinum
 import ir.smsgaclient.ui.theme.StatusConnectedForwarding
 import ir.smsgaclient.ui.theme.StatusNotForwarding
 import ir.smsgaclient.ui.theme.SurfaceElevated
-import ir.smsgaclient.ui.theme.TealAccent
-import ir.smsgaclient.ui.theme.TealPrimary
 import ir.smsgaclient.ui.theme.TextMuted
 import ir.smsgaclient.ui.theme.TextPrimary
 import ir.smsgaclient.ui.theme.TextSecondary
@@ -80,7 +77,7 @@ fun SettingsScreen(
         modifier = modifier
             .fillMaxSize()
             .background(BackgroundMidnight)
-            .padding(16.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 
@@ -107,9 +104,9 @@ fun SettingsScreen(
                     placeholder = { Text("https://example.com/api/sms/webhook") },
                     isError = uiState.errorMessage != null,
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(20.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = TealPrimary,
+                        focusedBorderColor = PureWhite,
                         unfocusedBorderColor = BorderSubtle,
                         focusedTextColor = TextPrimary,
                         unfocusedTextColor = TextPrimary
@@ -126,7 +123,7 @@ fun SettingsScreen(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(14.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -142,40 +139,44 @@ fun SettingsScreen(
                         Text(
                             text = uiState.apiTokenMasked.ifEmpty { "هنوز جفت‌سازی انجام نشده است" },
                             style = CodeSnippetStyle,
-                            color = TealAccent
+                            color = PureWhite
                         )
                     }
                     Box(
                         modifier = Modifier
                             .clip(CircleShape)
                             .background(SurfaceElevated)
+                            .border(1.dp, BorderSubtle, CircleShape)
                             .padding(8.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Key,
                             contentDescription = null,
-                            tint = TealAccent,
+                            tint = PureWhite,
                             modifier = Modifier.size(20.dp)
                         )
                     }
                 }
 
-                Spacer(modifier = Modifier.height(14.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
                     onClick = onTestSms,
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = TealPrimary)
+                    shape = RoundedCornerShape(24.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = PureWhite,
+                        contentColor = PureBlack
+                    )
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.Send,
                         contentDescription = null,
-                        tint = Color.White,
+                        tint = PureBlack,
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(text = "ارسال پیامک تستی به وب‌هوک", color = Color.White)
+                    Text(text = "ارسال پیامک تستی به وب‌هوک", color = PureBlack, fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -206,8 +207,10 @@ fun SettingsScreen(
                         checked = uiState.onlyDeposits,
                         onCheckedChange = {  },
                         colors = SwitchDefaults.colors(
-                            checkedThumbColor = Color.White,
-                            checkedTrackColor = TealPrimary
+                            checkedThumbColor = PureBlack,
+                            checkedTrackColor = PureWhite,
+                            uncheckedThumbColor = TextMuted,
+                            uncheckedTrackColor = SurfaceElevated
                         )
                     )
                 }
@@ -218,9 +221,6 @@ fun SettingsScreen(
             val context = androidx.compose.ui.platform.LocalContext.current
             val isBatteryExempt = remember {
                 mutableStateOf(ir.smsgaclient.util.PermissionManager.isBatteryOptimizationIgnored(context))
-            }
-            val hasSms = remember {
-                mutableStateOf(ir.smsgaclient.util.PermissionManager.hasSmsPermissions(context))
             }
 
             SettingsCard(
@@ -246,52 +246,55 @@ fun SettingsScreen(
                                 "بهینه‌سازی فعال است (ممکن است در خواب پیامک‌ها دریافت نشوند)"
                             },
                             style = CockpitTypography.bodySmall,
-                            color = if (isBatteryExempt.value) StatusConnectedForwarding else Color(0xFFF59E0B)
+                            color = if (isBatteryExempt.value) PureWhite else SilverPlatinum
                         )
                     }
                     Box(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(
-                                if (isBatteryExempt.value) Color(0x2210B981) else Color(0x22F59E0B)
-                            )
-                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(SurfaceElevated)
+                            .border(1.dp, BorderSubtle, RoundedCornerShape(14.dp))
+                            .padding(horizontal = 10.dp, vertical = 4.dp)
                     ) {
                         Text(
                             text = if (isBatteryExempt.value) "تأیید شده ✓" else "محدود شده ⚠️",
                             style = CockpitTypography.labelSmall,
-                            color = if (isBatteryExempt.value) StatusConnectedForwarding else Color(0xFFF59E0B)
+                            color = PureWhite
                         )
                     }
                 }
 
                 if (!isBatteryExempt.value) {
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
                     Button(
                         onClick = {
                             ir.smsgaclient.util.PermissionManager.requestIgnoreBatteryOptimization(context)
                             isBatteryExempt.value = ir.smsgaclient.util.PermissionManager.isBatteryOptimizationIgnored(context)
                         },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF59E0B)),
-                        shape = RoundedCornerShape(10.dp)
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = PureWhite,
+                            contentColor = PureBlack
+                        ),
+                        shape = RoundedCornerShape(22.dp)
                     ) {
                         Text(
                             text = "درخواست معافیت و فعالیت نامحدود باتری",
                             style = CockpitTypography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                            color = Color.Black
+                            color = PureBlack
                         )
                     }
                 }
 
-                Spacer(modifier = Modifier.height(14.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
+                        .clip(RoundedCornerShape(20.dp))
                         .background(SurfaceElevated)
-                        .padding(12.dp)
+                        .border(1.dp, BorderSubtle, RoundedCornerShape(20.dp))
+                        .padding(14.dp)
                 ) {
                     Text(
                         text = "شروع خودکار در گوشی (AutoStart)",
@@ -305,19 +308,19 @@ fun SettingsScreen(
                         color = TextSecondary,
                         lineHeight = 18.sp
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
                     OutlinedButton(
                         onClick = {
                             ir.smsgaclient.util.PermissionManager.openOemAutoStartSettings(context)
                         },
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(8.dp),
+                        shape = RoundedCornerShape(20.dp),
                         border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
                     ) {
                         Text(
                             text = "تنظیم شروع خودکار گوشی",
                             style = CockpitTypography.labelMedium,
-                            color = TealPrimary
+                            color = PureWhite
                         )
                     }
                 }
@@ -358,9 +361,9 @@ fun SettingsScreen(
                 OutlinedButton(
                     onClick = { showRevokeConfirmDialog = true },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = StatusNotForwarding),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, StatusNotForwarding.copy(alpha = 0.5f))
+                    shape = RoundedCornerShape(22.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = SilverPlatinum),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
                 ) {
                     Text(text = "قطع اتصال و لغو جفت‌سازی دستگاه")
                 }
@@ -375,7 +378,7 @@ fun SettingsScreen(
                 Text(
                     text = "لغو جفت‌سازی دستگاه؟",
                     style = CockpitTypography.titleLarge,
-                    color = StatusNotForwarding
+                    color = PureWhite
                 )
             },
             text = {
@@ -391,18 +394,26 @@ fun SettingsScreen(
                         showRevokeConfirmDialog = false
                         viewModel.revokePairing()
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = StatusNotForwarding)
+                    shape = RoundedCornerShape(20.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = PureWhite,
+                        contentColor = PureBlack
+                    )
                 ) {
-                    Text(text = "تأیید و لغو", color = Color.White)
+                    Text(text = "تأیید و لغو", color = PureBlack, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
-                OutlinedButton(onClick = { showRevokeConfirmDialog = false }) {
+                OutlinedButton(
+                    onClick = { showRevokeConfirmDialog = false },
+                    shape = RoundedCornerShape(20.dp),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
+                ) {
                     Text(text = "انصراف", color = TextSecondary)
                 }
             },
             containerColor = CardBackground,
-            shape = RoundedCornerShape(16.dp)
+            shape = RoundedCornerShape(30.dp)
         )
     }
 }
@@ -415,26 +426,27 @@ fun SettingsCard(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(18.dp),
+        shape = RoundedCornerShape(28.dp),
         colors = CardDefaults.cardColors(containerColor = CardBackground),
         border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
     ) {
-        Column(modifier = Modifier.padding(18.dp)) {
+        Column(modifier = Modifier.padding(20.dp)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Box(
                     modifier = Modifier
-                        .size(34.dp)
+                        .size(38.dp)
                         .clip(CircleShape)
-                        .background(SurfaceElevated),
+                        .background(SurfaceElevated)
+                        .border(1.dp, BorderSubtle, CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = icon,
                         contentDescription = null,
-                        tint = TealAccent,
+                        tint = PureWhite,
                         modifier = Modifier.size(18.dp)
                     )
                 }
@@ -444,9 +456,8 @@ fun SettingsCard(
                     color = TextPrimary
                 )
             }
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             content()
         }
     }
 }
-

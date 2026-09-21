@@ -42,35 +42,35 @@ fun BackgroundPermissionWarningBanner(
         Card(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 6.dp)
+                .padding(horizontal = 4.dp, vertical = 4.dp)
                 .clickable { onResolveClick() },
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(26.dp),
             colors = CardDefaults.cardColors(
-                containerColor = Color(0xFF26180C)
+                containerColor = Color(0xFF18181C)
             ),
             border = androidx.compose.foundation.BorderStroke(
                 1.dp,
-                Color(0xFFF59E0B).copy(alpha = 0.4f)
+                Color(0xFF383842)
             )
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(14.dp),
+                    .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 Box(
                     modifier = Modifier
-                        .size(40.dp)
+                        .size(42.dp)
                         .clip(CircleShape)
-                        .background(Color(0xFFF59E0B).copy(alpha = 0.15f)),
+                        .background(Color(0xFF282830)),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = if (isSmsMissing) Icons.Default.SmsFailed else Icons.Default.BatteryAlert,
                         contentDescription = null,
-                        tint = Color(0xFFF59E0B),
+                        tint = PureWhite,
                         modifier = Modifier.size(22.dp)
                     )
                 }
@@ -83,7 +83,7 @@ fun BackgroundPermissionWarningBanner(
                             "بهینه‌سازی باتری مانع اجرای مداوم است"
                         },
                         style = CockpitTypography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                        color = Color(0xFFFCD34D)
+                        color = PureWhite
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
@@ -93,21 +93,24 @@ fun BackgroundPermissionWarningBanner(
                             "برای دریافت بدون قطعی در زمان خاموش بودن صفحه، لمس کنید."
                         },
                         style = CockpitTypography.bodySmall,
-                        color = Color(0xFFFDE68A).copy(alpha = 0.85f),
+                        color = GrayTextSecondary,
                         lineHeight = 18.sp
                     )
                 }
 
                 Button(
                     onClick = onResolveClick,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF59E0B)),
-                    shape = RoundedCornerShape(10.dp),
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = PureWhite,
+                        contentColor = PureBlack
+                    ),
+                    shape = RoundedCornerShape(20.dp),
+                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
                 ) {
                     Text(
                         text = "رفع مشکل",
                         style = CockpitTypography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                        color = Color.Black
+                        color = PureBlack
                     )
                 }
             }
@@ -133,38 +136,38 @@ fun BackgroundSetupModalDialog(
             modifier = Modifier
                 .fillMaxWidth(0.92f)
                 .padding(vertical = 16.dp),
-            shape = RoundedCornerShape(24.dp),
+            shape = RoundedCornerShape(34.dp),
             colors = CardDefaults.cardColors(containerColor = CardBackground),
             border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(20.dp),
+                    .padding(22.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
                 Box(
                     modifier = Modifier
-                        .size(56.dp)
+                        .size(60.dp)
                         .clip(CircleShape)
                         .background(
                             Brush.radialGradient(
-                                colors = listOf(TealPrimary.copy(alpha = 0.25f), Color.Transparent)
+                                colors = listOf(Color(0xFF2E2E36), Color(0xFF141416))
                             )
                         )
-                        .border(1.dp, TealPrimary.copy(alpha = 0.4f), CircleShape),
+                        .border(1.dp, Color(0xFF42424E), CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.Default.Shield,
                         contentDescription = null,
-                        tint = TealPrimary,
+                        tint = PureWhite,
                         modifier = Modifier.size(28.dp)
                     )
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(14.dp))
 
                 Text(
                     text = "تنظیم دریافت مداوم در پس‌زمینه",
@@ -181,7 +184,7 @@ fun BackgroundSetupModalDialog(
                     lineHeight = 22.sp
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(18.dp))
 
                 SetupStepItem(
                     icon = Icons.Default.Sms,
@@ -207,10 +210,11 @@ fun BackgroundSetupModalDialog(
 
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(14.dp),
-                    colors = CardDefaults.cardColors(containerColor = SurfaceElevated)
+                    shape = RoundedCornerShape(22.dp),
+                    colors = CardDefaults.cardColors(containerColor = SurfaceElevated),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
                 ) {
-                    Column(modifier = Modifier.padding(12.dp)) {
+                    Column(modifier = Modifier.padding(14.dp)) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -218,7 +222,7 @@ fun BackgroundSetupModalDialog(
                             Icon(
                                 imageVector = Icons.Default.Info,
                                 contentDescription = null,
-                                tint = TealPrimary,
+                                tint = PureWhite,
                                 modifier = Modifier.size(18.dp)
                             )
                             Text(
@@ -234,36 +238,37 @@ fun BackgroundSetupModalDialog(
                             color = TextSecondary,
                             lineHeight = 18.sp
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
                         OutlinedButton(
                             onClick = onOpenOemSettings,
                             modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(8.dp),
+                            shape = RoundedCornerShape(20.dp),
                             border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
                         ) {
                             Text(
                                 text = "باز کردن تنظیمات اختصاصی دستگاه",
                                 style = CockpitTypography.labelMedium,
-                                color = TealPrimary
+                                color = PureWhite
                             )
                         }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(18.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 Button(
                     onClick = onDismiss,
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(24.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (hasSmsPermission && isBatteryExempted) TealPrimary else SurfaceElevated
+                        containerColor = if (hasSmsPermission && isBatteryExempted) PureWhite else SurfaceElevated,
+                        contentColor = if (hasSmsPermission && isBatteryExempted) PureBlack else TextPrimary
                     )
                 ) {
                     Text(
                         text = if (hasSmsPermission && isBatteryExempted) "عالی شد، بستن پنجره" else "متوجه شدم (بعداً تنظیم می‌کنم)",
                         style = CockpitTypography.labelLarge,
-                        color = if (hasSmsPermission && isBatteryExempted) Color.Black else TextPrimary
+                        color = if (hasSmsPermission && isBatteryExempted) PureBlack else TextPrimary
                     )
                 }
             }
@@ -282,13 +287,14 @@ private fun SetupStepItem(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = SurfaceElevated)
+        shape = RoundedCornerShape(22.dp),
+        colors = CardDefaults.cardColors(containerColor = SurfaceElevated),
+        border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp)
+                .padding(14.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -302,7 +308,7 @@ private fun SetupStepItem(
                     Icon(
                         imageVector = icon,
                         contentDescription = null,
-                        tint = if (isGranted) StatusConnectedForwarding else Color(0xFFF59E0B),
+                        tint = if (isGranted) PureWhite else GrayTextSecondary,
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
@@ -315,14 +321,15 @@ private fun SetupStepItem(
                 if (isGranted) {
                     Box(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(6.dp))
-                            .background(Color(0x2210B981))
-                            .padding(horizontal = 8.dp, vertical = 3.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(Color(0xFF282830))
+                            .border(1.dp, Color(0xFF42424E), RoundedCornerShape(16.dp))
+                            .padding(horizontal = 10.dp, vertical = 4.dp)
                     ) {
                         Text(
                             text = "فعال شد ✓",
                             style = CockpitTypography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                            color = StatusConnectedForwarding
+                            color = PureWhite
                         )
                     }
                 }
@@ -338,17 +345,20 @@ private fun SetupStepItem(
             )
 
             if (!isGranted) {
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 Button(
                     onClick = onAction,
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = TealPrimary)
+                    shape = RoundedCornerShape(20.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = PureWhite,
+                        contentColor = PureBlack
+                    )
                 ) {
                     Text(
                         text = buttonText,
                         style = CockpitTypography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                        color = Color.Black
+                        color = PureBlack
                     )
                 }
             }

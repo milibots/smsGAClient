@@ -4,16 +4,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 
 private val DarkColorScheme = darkColorScheme(
-    primary = TealPrimary,
-    onPrimary = TextPrimary,
+    primary = PureWhite,
+    onPrimary = PureBlack,
     primaryContainer = SurfaceElevated,
-    onPrimaryContainer = TealAccent,
-    secondary = AmberGold,
-    onSecondary = TextPrimary,
+    onPrimaryContainer = PureWhite,
+    secondary = SilverPlatinum,
+    onSecondary = PureBlack,
     background = BackgroundMidnight,
     onBackground = TextPrimary,
     surface = CardBackground,
@@ -27,7 +28,6 @@ private val DarkColorScheme = darkColorScheme(
 fun SmsGaTheme(
     content: @Composable () -> Unit
 ) {
-
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         MaterialTheme(
             colorScheme = DarkColorScheme,

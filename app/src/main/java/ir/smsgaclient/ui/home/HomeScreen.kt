@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -49,17 +48,15 @@ import ir.smsgaclient.ui.common.BankAvatar
 import ir.smsgaclient.ui.common.BridgeStatusBar
 import ir.smsgaclient.ui.common.StatusPill
 import ir.smsgaclient.ui.common.getBankInfo
-import ir.smsgaclient.ui.theme.AmberGold
 import ir.smsgaclient.ui.theme.BackgroundMidnight
 import ir.smsgaclient.ui.theme.BorderSubtle
 import ir.smsgaclient.ui.theme.CardBackground
 import ir.smsgaclient.ui.theme.CockpitTypography
 import ir.smsgaclient.ui.theme.CurrencyUnitStyle
-import ir.smsgaclient.ui.theme.Navy800
+import ir.smsgaclient.ui.theme.PureBlack
+import ir.smsgaclient.ui.theme.PureWhite
+import ir.smsgaclient.ui.theme.SilverPlatinum
 import ir.smsgaclient.ui.theme.SurfaceElevated
-import ir.smsgaclient.ui.theme.TealAccent
-import ir.smsgaclient.ui.theme.TealPrimary
-import ir.smsgaclient.ui.theme.TealPrimaryLight
 import ir.smsgaclient.ui.theme.TextMuted
 import ir.smsgaclient.ui.theme.TextPrimary
 import ir.smsgaclient.ui.theme.TextSecondary
@@ -138,7 +135,7 @@ fun HomeScreen(
         modifier = modifier
             .fillMaxSize()
             .background(BackgroundMidnight)
-            .padding(16.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 
@@ -173,7 +170,7 @@ fun HomeScreen(
                     value = PersianNumberFormatter.toPersianDigits(uiState.todayTransactionsCount.toString()),
                     unit = "تراکنش",
                     icon = Icons.AutoMirrored.Filled.ReceiptLong,
-                    iconTint = TealAccent,
+                    iconTint = PureWhite,
                     modifier = Modifier.weight(1f)
                 )
                 MetricCard(
@@ -181,7 +178,7 @@ fun HomeScreen(
                     value = PersianNumberFormatter.toPersianDigits(uiState.pendingQueueCount.toString()),
                     unit = "پیامک",
                     icon = Icons.AutoMirrored.Filled.ScheduleSend,
-                    iconTint = AmberGold,
+                    iconTint = SilverPlatinum,
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -202,22 +199,24 @@ fun HomeScreen(
                 )
                 Row(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(SurfaceElevated)
+                        .border(1.dp, BorderSubtle, RoundedCornerShape(20.dp))
                         .clickable { onNavigateToTransactions() }
-                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                        .padding(horizontal = 12.dp, vertical = 6.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
                         text = "مشاهده همه",
-                        style = CockpitTypography.bodyMedium,
-                        color = TealPrimaryLight
+                        style = CockpitTypography.labelMedium,
+                        color = PureWhite
                     )
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "مشاهده همه",
-                        tint = TealPrimaryLight,
-                        modifier = Modifier.size(18.dp)
+                        tint = PureWhite,
+                        modifier = Modifier.size(16.dp)
                     )
                 }
             }
@@ -227,22 +226,23 @@ fun HomeScreen(
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(28.dp),
                     colors = CardDefaults.cardColors(containerColor = CardBackground),
                     border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(28.dp),
+                            .padding(32.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
                         Box(
                             modifier = Modifier
-                                .size(56.dp)
+                                .size(60.dp)
                                 .clip(CircleShape)
-                                .background(SurfaceElevated),
+                                .background(SurfaceElevated)
+                                .border(1.dp, BorderSubtle, CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
@@ -252,7 +252,7 @@ fun HomeScreen(
                                 modifier = Modifier.size(28.dp)
                             )
                         }
-                        Spacer(modifier = Modifier.height(14.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = "هنوز تراکنشی برای امروز ثبت نشده است",
                             style = CockpitTypography.titleMedium,
@@ -288,9 +288,9 @@ fun SalesHeroCard(
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(22.dp),
+        shape = RoundedCornerShape(32.dp),
         colors = CardDefaults.cardColors(containerColor = CardBackground),
-        border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
+        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF383840))
     ) {
         Box(
             modifier = Modifier
@@ -298,9 +298,9 @@ fun SalesHeroCard(
                 .background(
                     Brush.linearGradient(
                         colors = listOf(
-                            Navy800,
-                            Color(0xFF132F3D),
-                            Navy800
+                            Color(0xFF222226),
+                            Color(0xFF141416),
+                            Color(0xFF0B0B0D)
                         )
                     )
                 )
@@ -315,12 +315,12 @@ fun SalesHeroCard(
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.CalendarToday,
                             contentDescription = null,
-                            tint = TealAccent,
+                            tint = PureWhite,
                             modifier = Modifier.size(16.dp)
                         )
                         Text(
@@ -331,19 +331,20 @@ fun SalesHeroCard(
                     }
                     Box(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(6.dp))
-                            .background(Color(0x2214B8A6))
-                            .padding(horizontal = 8.dp, vertical = 2.dp)
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(Color(0xFF2C2C32))
+                            .border(1.dp, Color(0xFF42424A), RoundedCornerShape(20.dp))
+                            .padding(horizontal = 10.dp, vertical = 4.dp)
                     ) {
                         Text(
                             text = "زنده و خودکار",
                             style = CockpitTypography.labelSmall,
-                            color = TealAccent
+                            color = PureWhite
                         )
                     }
                 }
 
-                Spacer(modifier = Modifier.height(14.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Row(
                     verticalAlignment = Alignment.Bottom,
@@ -351,14 +352,14 @@ fun SalesHeroCard(
                 ) {
                     Text(
                         text = PersianNumberFormatter.formatNumber(salesToman),
-                        style = CockpitTypography.headlineLarge.copy(fontSize = 32.sp),
+                        style = CockpitTypography.headlineLarge.copy(fontSize = 34.sp),
                         fontWeight = FontWeight.Bold,
-                        color = TextPrimary
+                        color = PureWhite
                     )
                     Text(
                         text = "تومان",
                         style = CurrencyUnitStyle.copy(fontSize = 16.sp),
-                        color = TealAccent,
+                        color = SilverPlatinum,
                         modifier = Modifier.padding(bottom = 6.dp)
                     )
                 }
@@ -369,14 +370,15 @@ fun SalesHeroCard(
                     color = TextMuted
                 )
 
-                Spacer(modifier = Modifier.height(18.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(Color(0x330A0F1D))
-                        .border(1.dp, Color(0x22FFFFFF), RoundedCornerShape(10.dp))
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(Color(0xFF18181C))
+                        .border(1.dp, Color(0xFF2E2E34), RoundedCornerShape(20.dp))
+                        .padding(horizontal = 14.dp, vertical = 10.dp)
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -385,8 +387,8 @@ fun SalesHeroCard(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.TrendingUp,
                             contentDescription = null,
-                            tint = TealPrimaryLight,
-                            modifier = Modifier.size(16.dp)
+                            tint = PureWhite,
+                            modifier = Modifier.size(18.dp)
                         )
                         Text(
                             text = "میانگین هر تراکنش:",
@@ -397,7 +399,7 @@ fun SalesHeroCard(
                             text = "${PersianNumberFormatter.formatNumber(avgTicketToman)} تومان",
                             style = CockpitTypography.bodySmall,
                             fontWeight = FontWeight.Bold,
-                            color = TextPrimary
+                            color = PureWhite
                         )
                     }
                 }
@@ -417,12 +419,12 @@ fun MetricCard(
 ) {
     Card(
         modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(26.dp),
         colors = CardDefaults.cardColors(containerColor = CardBackground),
         border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(18.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -436,9 +438,10 @@ fun MetricCard(
                 )
                 Box(
                     modifier = Modifier
-                        .size(32.dp)
+                        .size(36.dp)
                         .clip(CircleShape)
-                        .background(iconTint.copy(alpha = 0.15f)),
+                        .background(SurfaceElevated)
+                        .border(1.dp, BorderSubtle, CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -450,15 +453,15 @@ fun MetricCard(
                 }
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             Row(
                 verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Text(
                     text = value,
-                    style = CockpitTypography.titleLarge.copy(fontSize = 22.sp),
+                    style = CockpitTypography.titleLarge.copy(fontSize = 24.sp),
                     fontWeight = FontWeight.Bold,
                     color = TextPrimary
                 )
@@ -485,22 +488,22 @@ fun RecentTransactionRow(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(containerColor = CardBackground),
         border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(14.dp),
+                .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(14.dp)
             ) {
-                BankAvatar(bankId = transaction.bankId, size = 42.dp)
+                BankAvatar(bankId = transaction.bankId, size = 44.dp)
                 Column {
                     Text(
                         text = bankInfo.nameFa,
@@ -521,12 +524,11 @@ fun RecentTransactionRow(
                     text = "+ ${PersianNumberFormatter.formatToman(transaction.amountRial / 10)}",
                     style = CockpitTypography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = TealAccent
+                    color = PureWhite
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(6.dp))
                 StatusPill(status = transaction.status)
             }
         }
     }
 }
-

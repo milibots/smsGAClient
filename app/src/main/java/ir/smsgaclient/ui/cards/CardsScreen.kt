@@ -22,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CreditCard
-import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -52,23 +51,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ir.smsgaclient.ui.common.BankAvatar
 import ir.smsgaclient.ui.common.EmvChipGraphic
 import ir.smsgaclient.ui.common.getBankInfo
-import ir.smsgaclient.ui.theme.AmberGold
 import ir.smsgaclient.ui.theme.BackgroundMidnight
 import ir.smsgaclient.ui.theme.BorderSubtle
 import ir.smsgaclient.ui.theme.CardBackground
 import ir.smsgaclient.ui.theme.CardNumberStyle
 import ir.smsgaclient.ui.theme.CockpitTypography
-import ir.smsgaclient.ui.theme.Navy700
-import ir.smsgaclient.ui.theme.Navy800
-import ir.smsgaclient.ui.theme.StatusConnectedForwarding
-import ir.smsgaclient.ui.theme.StatusConnectedQueued
-import ir.smsgaclient.ui.theme.StatusNotForwarding
+import ir.smsgaclient.ui.theme.PureBlack
+import ir.smsgaclient.ui.theme.PureWhite
+import ir.smsgaclient.ui.theme.SilverPlatinum
 import ir.smsgaclient.ui.theme.SurfaceElevated
-import ir.smsgaclient.ui.theme.TealAccent
-import ir.smsgaclient.ui.theme.TealPrimary
 import ir.smsgaclient.ui.theme.TextMuted
 import ir.smsgaclient.ui.theme.TextPrimary
 import ir.smsgaclient.ui.theme.TextSecondary
@@ -87,15 +80,15 @@ fun CardsScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showAddDialog = true },
-                containerColor = TealPrimary,
-                contentColor = TextPrimary,
-                shape = RoundedCornerShape(16.dp),
-                modifier = Modifier.size(56.dp)
+                containerColor = PureWhite,
+                contentColor = PureBlack,
+                shape = CircleShape,
+                modifier = Modifier.size(58.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "افزودن کارت",
-                    tint = Color.White
+                    tint = PureBlack
                 )
             }
         },
@@ -106,7 +99,7 @@ fun CardsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp)
+                .padding(horizontal = 16.dp, vertical = 12.dp)
         ) {
 
             Row(
@@ -134,7 +127,7 @@ fun CardsScreen(
             if (uiState.cards.isEmpty()) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(18.dp),
+                    shape = RoundedCornerShape(28.dp),
                     colors = CardDefaults.cardColors(containerColor = CardBackground),
                     border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
                 ) {
@@ -147,9 +140,10 @@ fun CardsScreen(
                     ) {
                         Box(
                             modifier = Modifier
-                                .size(56.dp)
+                                .size(60.dp)
                                 .clip(CircleShape)
-                                .background(SurfaceElevated),
+                                .background(SurfaceElevated)
+                                .border(1.dp, BorderSubtle, CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
@@ -172,12 +166,16 @@ fun CardsScreen(
                             color = TextMuted,
                             textAlign = androidx.compose.ui.text.style.TextAlign.Center
                         )
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(18.dp))
                         Button(
                             onClick = { showAddDialog = true },
-                            colors = ButtonDefaults.buttonColors(containerColor = TealPrimary)
+                            shape = RoundedCornerShape(22.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = PureWhite,
+                                contentColor = PureBlack
+                            )
                         ) {
-                            Text(text = "افزودن اولین کارت", color = Color.White)
+                            Text(text = "افزودن اولین کارت", color = PureBlack, fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -221,35 +219,35 @@ fun BankCardWithQuotaCard(cardUsage: CardWithUsage) {
     )
 
     val progressColor = when {
-        cardUsage.usagePercent >= 1.0f -> StatusNotForwarding
-        cardUsage.usagePercent >= 0.9f -> StatusConnectedQueued
-        else -> StatusConnectedForwarding
+        cardUsage.usagePercent >= 1.0f -> PureWhite
+        cardUsage.usagePercent >= 0.9f -> SilverPlatinum
+        else -> PureWhite
     }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(30.dp),
         colors = CardDefaults.cardColors(containerColor = CardBackground),
         border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(18.dp)) {
 
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(120.dp)
-                    .clip(RoundedCornerShape(14.dp))
+                    .height(130.dp)
+                    .clip(RoundedCornerShape(22.dp))
                     .background(
                         Brush.linearGradient(
                             listOf(
-                                bankInfo.primaryColor,
-                                bankInfo.secondaryColor,
-                                Color(0xFF0F172A)
+                                Color(0xFF282A30),
+                                Color(0xFF181A1E),
+                                Color(0xFF0C0D10)
                             )
                         )
                     )
-                    .border(1.dp, Color(0x33FFFFFF), RoundedCornerShape(14.dp))
-                    .padding(14.dp)
+                    .border(1.dp, Color(0xFF383842), RoundedCornerShape(22.dp))
+                    .padding(16.dp)
             ) {
                 Column(
                     modifier = Modifier.matchParentSize(),
@@ -271,7 +269,7 @@ fun BankCardWithQuotaCard(cardUsage: CardWithUsage) {
 
                     Text(
                         text = "••••  ••••  ••••  ${PersianNumberFormatter.toPersianDigits(card.last4)}",
-                        style = CardNumberStyle.copy(fontSize = 16.sp),
+                        style = CardNumberStyle.copy(fontSize = 17.sp),
                         color = Color.White
                     )
 
@@ -294,7 +292,7 @@ fun BankCardWithQuotaCard(cardUsage: CardWithUsage) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -314,19 +312,19 @@ fun BankCardWithQuotaCard(cardUsage: CardWithUsage) {
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             LinearProgressIndicator(
                 progress = { animatedProgress },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(8.dp)
-                    .clip(RoundedCornerShape(4.dp)),
+                    .clip(RoundedCornerShape(6.dp)),
                 color = progressColor,
                 trackColor = SurfaceElevated
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -356,7 +354,7 @@ fun BankCardWithQuotaCard(cardUsage: CardWithUsage) {
                         text = PersianNumberFormatter.formatToman(remainingToman),
                         style = CockpitTypography.bodyMedium,
                         fontWeight = FontWeight.Bold,
-                        color = if (remainingToman > 0) TealAccent else StatusNotForwarding
+                        color = PureWhite
                     )
                 }
             }
@@ -395,7 +393,7 @@ fun AddCardDialog(
         },
         text = {
             Column(
-                verticalArrangement = Arrangement.spacedBy(10.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
@@ -403,16 +401,19 @@ fun AddCardDialog(
                     style = CockpitTypography.titleSmall,
                     color = TextSecondary
                 )
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     items(popularBanks) { (id, name) ->
                         val isSelected = selectedBank == id
                         FilterChip(
                             selected = isSelected,
                             onClick = { selectedBank = id },
+                            shape = RoundedCornerShape(20.dp),
                             label = { Text(text = name, style = CockpitTypography.labelSmall) },
                             colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = TealPrimary,
-                                selectedLabelColor = Color.White
+                                selectedContainerColor = PureWhite,
+                                selectedLabelColor = PureBlack,
+                                containerColor = SurfaceElevated,
+                                labelColor = TextSecondary
                             )
                         )
                     }
@@ -424,10 +425,13 @@ fun AddCardDialog(
                     label = { Text("۴ رقم آخر کارت") },
                     placeholder = { Text("مثلاً ۴۸۲۱") },
                     singleLine = true,
+                    shape = RoundedCornerShape(20.dp),
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = TealPrimary,
-                        unfocusedBorderColor = BorderSubtle
+                        focusedBorderColor = PureWhite,
+                        unfocusedBorderColor = BorderSubtle,
+                        focusedTextColor = TextPrimary,
+                        unfocusedTextColor = TextPrimary
                     )
                 )
 
@@ -437,10 +441,13 @@ fun AddCardDialog(
                     label = { Text("نام صاحب کارت") },
                     placeholder = { Text("مثلاً علی رضایی") },
                     singleLine = true,
+                    shape = RoundedCornerShape(20.dp),
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = TealPrimary,
-                        unfocusedBorderColor = BorderSubtle
+                        focusedBorderColor = PureWhite,
+                        unfocusedBorderColor = BorderSubtle,
+                        focusedTextColor = TextPrimary,
+                        unfocusedTextColor = TextPrimary
                     )
                 )
 
@@ -449,10 +456,13 @@ fun AddCardDialog(
                     onValueChange = { if (it.all { char -> char.isDigit() }) limitToman = it },
                     label = { Text("سقف روزانه (تومان)") },
                     singleLine = true,
+                    shape = RoundedCornerShape(20.dp),
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = TealPrimary,
-                        unfocusedBorderColor = BorderSubtle
+                        focusedBorderColor = PureWhite,
+                        unfocusedBorderColor = BorderSubtle,
+                        focusedTextColor = TextPrimary,
+                        unfocusedTextColor = TextPrimary
                     )
                 )
             }
@@ -466,18 +476,25 @@ fun AddCardDialog(
                     }
                 },
                 enabled = last4.length == 4,
-                colors = ButtonDefaults.buttonColors(containerColor = TealPrimary)
+                shape = RoundedCornerShape(22.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = PureWhite,
+                    contentColor = PureBlack
+                )
             ) {
-                Text(text = "افزودن کارت", color = Color.White)
+                Text(text = "افزودن کارت", color = PureBlack, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
-            OutlinedButton(onClick = onDismiss) {
+            OutlinedButton(
+                onClick = onDismiss,
+                shape = RoundedCornerShape(22.dp),
+                border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
+            ) {
                 Text(text = "انصراف", color = TextSecondary)
             }
         },
         containerColor = CardBackground,
-        shape = RoundedCornerShape(18.dp)
+        shape = RoundedCornerShape(32.dp)
     )
 }
-

@@ -32,14 +32,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ir.smsgaclient.ui.theme.BackgroundMidnight
+import ir.smsgaclient.ui.theme.BorderSubtle
 import ir.smsgaclient.ui.theme.CardBackground
 import ir.smsgaclient.ui.theme.CockpitTypography
-import ir.smsgaclient.ui.theme.StatusConnectedForwarding
-import ir.smsgaclient.ui.theme.StatusNotForwarding
-import ir.smsgaclient.ui.theme.SurfaceDark
-import ir.smsgaclient.ui.theme.TealPrimary
+import ir.smsgaclient.ui.theme.PureBlack
+import ir.smsgaclient.ui.theme.PureWhite
+import ir.smsgaclient.ui.theme.SilverPlatinum
+import ir.smsgaclient.ui.theme.SurfaceElevated
 import ir.smsgaclient.ui.theme.TextMuted
 import ir.smsgaclient.ui.theme.TextPrimary
 import ir.smsgaclient.ui.theme.TextSecondary
@@ -73,23 +76,25 @@ fun OnboardingScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(SurfaceDark)
-            .padding(24.dp),
+            .background(BackgroundMidnight)
+            .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(24.dp),
-            colors = CardDefaults.cardColors(containerColor = CardBackground)
+            shape = RoundedCornerShape(34.dp),
+            colors = CardDefaults.cardColors(containerColor = CardBackground),
+            border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
         ) {
             Column(
-                modifier = Modifier.padding(24.dp),
+                modifier = Modifier.padding(26.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 when (currentStep) {
                     1 -> {
-
+                        ir.smsgaclient.ui.common.MonochromeSmsGaLogo(size = 88.dp)
+                        Spacer(modifier = Modifier.height(20.dp))
                         Text(
                             text = "به smsGA خوش آمدید",
                             style = CockpitTypography.headlineLarge,
@@ -101,18 +106,27 @@ fun OnboardingScreen(
                             style = CockpitTypography.bodyLarge,
                             color = TextSecondary
                         )
-                        Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(28.dp))
                         Button(
                             onClick = { currentStep = 2 },
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = ButtonDefaults.buttonColors(containerColor = TealPrimary)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(52.dp),
+                            shape = RoundedCornerShape(26.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = PureWhite,
+                                contentColor = PureBlack
+                            )
                         ) {
-                            Text(text = "شروع راه‌اندازی (کمتر از ۲ دقیقه)")
+                            Text(
+                                text = "شروع راه‌اندازی (کمتر از ۲ دقیقه)",
+                                color = PureBlack,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     }
 
                     2 -> {
-
                         Text(
                             text = "مجوز دسترسی به پیامک",
                             style = CockpitTypography.headlineMedium,
@@ -124,7 +138,7 @@ fun OnboardingScreen(
                             style = CockpitTypography.bodyMedium,
                             color = TextSecondary
                         )
-                        Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(28.dp))
                         Button(
                             onClick = {
                                 smsPermissionLauncher.launch(
@@ -134,15 +148,24 @@ fun OnboardingScreen(
                                     )
                                 )
                             },
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = ButtonDefaults.buttonColors(containerColor = TealPrimary)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(52.dp),
+                            shape = RoundedCornerShape(26.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = PureWhite,
+                                contentColor = PureBlack
+                            )
                         ) {
-                            Text(text = "اعطای مجوز پیامک (الزامی)")
+                            Text(
+                                text = "اعطای مجوز پیامک (الزامی)",
+                                color = PureBlack,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     }
 
                     3 -> {
-
                         Text(
                             text = "مجوز اعلان‌ها",
                             style = CockpitTypography.headlineMedium,
@@ -154,7 +177,7 @@ fun OnboardingScreen(
                             style = CockpitTypography.bodyMedium,
                             color = TextSecondary
                         )
-                        Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(28.dp))
                         Button(
                             onClick = {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -163,22 +186,35 @@ fun OnboardingScreen(
                                     currentStep = 4
                                 }
                             },
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = ButtonDefaults.buttonColors(containerColor = TealPrimary)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(52.dp),
+                            shape = RoundedCornerShape(26.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = PureWhite,
+                                contentColor = PureBlack
+                            )
                         ) {
-                            Text(text = "اعطای مجوز اعلان")
+                            Text(
+                                text = "اعطای مجوز اعلان",
+                                color = PureBlack,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
                         OutlinedButton(
                             onClick = { currentStep = 4 },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(52.dp),
+                            shape = RoundedCornerShape(26.dp),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
                         ) {
-                            Text(text = "رد کردن این مرحله")
+                            Text(text = "رد کردن این مرحله", color = TextSecondary)
                         }
                     }
 
                     4 -> {
-
                         val isBatteryExempt = remember(currentStep) {
                             ir.smsgaclient.util.PermissionManager.isBatteryOptimizationIgnored(context)
                         }
@@ -195,38 +231,45 @@ fun OnboardingScreen(
                             color = TextSecondary,
                             lineHeight = 22.sp
                         )
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(20.dp))
 
                         if (isBatteryExempt) {
                             Card(
                                 modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(12.dp),
-                                colors = CardDefaults.cardColors(containerColor = Color(0x2210B981))
+                                shape = RoundedCornerShape(20.dp),
+                                colors = CardDefaults.cardColors(containerColor = SurfaceElevated),
+                                border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
                             ) {
                                 Row(
-                                    modifier = Modifier.padding(14.dp),
+                                    modifier = Modifier.padding(16.dp),
                                     verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    horizontalArrangement = Arrangement.spacedBy(10.dp)
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.CheckCircle,
                                         contentDescription = null,
-                                        tint = StatusConnectedForwarding
+                                        tint = PureWhite
                                     )
                                     Text(
                                         text = "بهینه‌سازی باتری با موفقیت غیرفعال شد ✓",
                                         style = CockpitTypography.titleSmall,
-                                        color = StatusConnectedForwarding
+                                        color = PureWhite
                                     )
                                 }
                             }
-                            Spacer(modifier = Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.height(20.dp))
                             Button(
                                 onClick = { currentStep = 5 },
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = ButtonDefaults.buttonColors(containerColor = TealPrimary)
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(52.dp),
+                                shape = RoundedCornerShape(26.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = PureWhite,
+                                    contentColor = PureBlack
+                                )
                             ) {
-                                Text(text = "ادامه به مرحله بعد", color = Color.Black)
+                                Text(text = "ادامه به مرحله بعد", color = PureBlack, fontWeight = FontWeight.Bold)
                             }
                         } else {
                             Button(
@@ -234,23 +277,36 @@ fun OnboardingScreen(
                                     ir.smsgaclient.util.PermissionManager.requestIgnoreBatteryOptimization(context)
                                     currentStep = 5
                                 },
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = ButtonDefaults.buttonColors(containerColor = TealPrimary)
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(52.dp),
+                                shape = RoundedCornerShape(26.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = PureWhite,
+                                    contentColor = PureBlack
+                                )
                             ) {
-                                Text(text = "درخواست مجوز فعالیت نامحدود باتری", color = Color.Black)
+                                Text(
+                                    text = "درخواست فعالیت نامحدود باتری",
+                                    color = PureBlack,
+                                    fontWeight = FontWeight.Bold
+                                )
                             }
-                            Spacer(modifier = Modifier.height(8.dp))
+                            Spacer(modifier = Modifier.height(10.dp))
                             OutlinedButton(
                                 onClick = { currentStep = 5 },
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(52.dp),
+                                shape = RoundedCornerShape(26.dp),
+                                border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
                             ) {
-                                Text(text = "رد کردن (توصیه نمی‌شود)")
+                                Text(text = "رد کردن (توصیه نمی‌شود)", color = TextSecondary)
                             }
                         }
                     }
 
                     5 -> {
-
                         Text(
                             text = "جفت‌سازی با پنل مرچنت",
                             style = CockpitTypography.headlineMedium,
@@ -262,19 +318,26 @@ fun OnboardingScreen(
                             style = CockpitTypography.bodyMedium,
                             color = TextSecondary
                         )
-                        Spacer(modifier = Modifier.height(20.dp))
+                        Spacer(modifier = Modifier.height(24.dp))
                         Text(
                             text = "۴۸۲ - ۱۹۳",
-                            style = CockpitTypography.headlineLarge,
-                            color = TealPrimary
+                            style = CockpitTypography.headlineLarge.copy(fontSize = 36.sp),
+                            fontWeight = FontWeight.Bold,
+                            color = PureWhite
                         )
-                        Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(28.dp))
                         Button(
                             onClick = onComplete,
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = ButtonDefaults.buttonColors(containerColor = TealPrimary)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(52.dp),
+                            shape = RoundedCornerShape(26.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = PureWhite,
+                                contentColor = PureBlack
+                            )
                         ) {
-                            Text(text = "ورود به داشبورد")
+                            Text(text = "ورود به داشبورد", color = PureBlack, fontWeight = FontWeight.Bold)
                         }
                     }
                 }

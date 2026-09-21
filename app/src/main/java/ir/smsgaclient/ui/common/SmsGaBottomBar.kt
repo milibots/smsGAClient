@@ -1,31 +1,49 @@
 package ir.smsgaclient.ui.common
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ReceiptLong
 import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import ir.smsgaclient.R
 import ir.smsgaclient.ui.navigation.NavRoutes
 import ir.smsgaclient.ui.theme.BorderSubtle
 import ir.smsgaclient.ui.theme.CardBackground
-import ir.smsgaclient.ui.theme.CockpitTypography
-import ir.smsgaclient.ui.theme.SurfaceElevated
-import ir.smsgaclient.ui.theme.TealAccent
+import ir.smsgaclient.ui.theme.PureBlack
+import ir.smsgaclient.ui.theme.PureWhite
 import ir.smsgaclient.ui.theme.TextMuted
-import ir.smsgaclient.ui.theme.TextPrimary
 
 sealed class BottomNavItem(
     val route: String,
@@ -51,43 +69,82 @@ fun SmsGaBottomBar(
     onNavigate: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    NavigationBar(
+    Box(
         modifier = modifier
-            .border(
-                width = 1.dp,
-                color = BorderSubtle
-            ),
-        containerColor = CardBackground,
-        tonalElevation = 8.dp
+            .fillMaxWidth()
+            .padding(start = 18.dp, end = 18.dp, bottom = 14.dp, top = 4.dp),
+        contentAlignment = Alignment.Center
     ) {
-        bottomNavItems.forEach { item ->
-            val selected = currentRoute == item.route
-            val title = stringResource(item.titleRes)
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(66.dp),
+            shape = RoundedCornerShape(34.dp),
+            color = CardBackground,
+            border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle),
+            shadowElevation = 12.dp
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                bottomNavItems.forEach { item ->
+                    val selected = currentRoute == item.route
+                    val title = stringResource(item.titleRes)
 
-            NavigationBarItem(
-                selected = selected,
-                onClick = { onNavigate(item.route) },
-                icon = {
-                    Icon(
-                        imageVector = item.icon,
-                        contentDescription = title
+                    val backgroundColor by animateColorAsState(
+                        targetValue = if (selected) PureWhite else Color.Transparent,
+                        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+                        label = "pillBgColor"
                     )
-                },
-                label = {
-                    Text(
-                        text = title,
-                        style = CockpitTypography.labelSmall
+                    val contentColor by animateColorAsState(
+                        targetValue = if (selected) PureBlack else TextMuted,
+                        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+                        label = "pillContentColor"
                     )
-                },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = TealAccent,
-                    selectedTextColor = TealAccent,
-                    indicatorColor = SurfaceElevated,
-                    unselectedIconColor = TextMuted,
-                    unselectedTextColor = TextMuted
-                )
-            )
+
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(26.dp))
+                            .background(backgroundColor)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ) {
+                                onNavigate(item.route)
+                            }
+                            .padding(horizontal = 14.dp, vertical = 9.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = title,
+                                tint = contentColor
+                            )
+                            AnimatedVisibility(
+                                visible = selected,
+                                enter = fadeIn(),
+                                exit = fadeOut()
+                            ) {
+                                Text(
+                                    text = title,
+                                    color = contentColor,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 13.sp,
+                                    maxLines = 1
+                                )
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
-

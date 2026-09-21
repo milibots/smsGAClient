@@ -61,20 +61,20 @@ data class BankInfo(
 
 fun getBankInfo(bankId: String): BankInfo {
     return when (bankId.lowercase().trim()) {
-        "blu" -> BankInfo("بلوبانک", "بلو", BankBlu, Color(0xFF0055A5))
-        "pasargad" -> BankInfo("بانک پاسارگاد", "پاس", BankPasargad, Color(0xFF1E1E1E))
-        "saman" -> BankInfo("بانک سامان", "سام", BankSaman, Color(0xFF0D47A1))
-        "mellat" -> BankInfo("بانک ملت", "ملت", BankMellat, Color(0xFF880E4F))
-        "melli" -> BankInfo("بانک ملی ایران", "ملی", BankMelli, Color(0xFF003865))
-        "sepah" -> BankInfo("بانک سپه", "سپه", BankSepah, Color(0xFF78350F))
-        "tejarat" -> BankInfo("بانک تجارت", "تجار", BankTejarat, Color(0xFF01579B))
-        "keshavarzi" -> BankInfo("بانک کشاورزی", "کشو", BankKeshavarzi, Color(0xFF14532D))
-        "parsian" -> BankInfo("بانک پارسیان", "پارس", BankParsian, Color(0xFF4A044E))
-        "refah" -> BankInfo("بانک رفاه کارگران", "رفاه", BankRefah, Color(0xFF064E3B))
-        "shahr" -> BankInfo("بانک شهر", "شهر", BankShahr, Color(0xFF991B1B))
-        "saderat" -> BankInfo("بانک صادرات", "صادر", BankSaderat, Color(0xFF1E3A8A))
-        "ayandeh" -> BankInfo("بانک آینده", "آیند", BankAyandeh, Color(0xFF581C87))
-        else -> BankInfo("بانک ${bankId.ifEmpty { "نامشخص" }}", "بانک", BankDefault, Color(0xFF1E293B))
+        "blu" -> BankInfo("بلوبانک", "بلو", BankBlu, Color(0xFF16181B))
+        "pasargad" -> BankInfo("بانک پاسارگاد", "پاس", BankPasargad, Color(0xFF0F1012))
+        "saman" -> BankInfo("بانک سامان", "سام", BankSaman, Color(0xFF1B1D22))
+        "mellat" -> BankInfo("بانک ملت", "ملت", BankMellat, Color(0xFF141518))
+        "melli" -> BankInfo("بانک ملی ایران", "ملی", BankMelli, Color(0xFF101114))
+        "sepah" -> BankInfo("بانک سپه", "سپه", BankSepah, Color(0xFF181A1F))
+        "tejarat" -> BankInfo("بانک تجارت", "تجار", BankTejarat, Color(0xFF15171B))
+        "keshavarzi" -> BankInfo("بانک کشاورزی", "کشو", BankKeshavarzi, Color(0xFF121417))
+        "parsian" -> BankInfo("بانک پارسیان", "پارس", BankParsian, Color(0xFF191B20))
+        "refah" -> BankInfo("بانک رفاه کارگران", "رفاه", BankRefah, Color(0xFF111215))
+        "shahr" -> BankInfo("بانک شهر", "شهر", BankShahr, Color(0xFF1A1C22))
+        "saderat" -> BankInfo("بانک صادرات", "صادر", BankSaderat, Color(0xFF131417))
+        "ayandeh" -> BankInfo("بانک آینده", "آیند", BankAyandeh, Color(0xFF18191E))
+        else -> BankInfo("بانک ${bankId.ifEmpty { "نامشخص" }}", "بانک", BankDefault, Color(0xFF151619))
     }
 }
 
@@ -91,10 +91,10 @@ fun BankAvatar(
             .clip(CircleShape)
             .background(
                 Brush.linearGradient(
-                    listOf(bankInfo.primaryColor, bankInfo.secondaryColor)
+                    listOf(Color(0xFF2E2E34), Color(0xFF141416))
                 )
             )
-            .border(1.dp, Color(0x33FFFFFF), CircleShape),
+            .border(1.dp, Color(0xFF42424A), CircleShape),
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -120,10 +120,10 @@ fun StatusPill(
 
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(16.dp))
             .background(bgColor)
-            .border(1.dp, textColor.copy(alpha = 0.3f), RoundedCornerShape(8.dp))
-            .padding(horizontal = 8.dp, vertical = 3.dp),
+            .border(1.dp, Color(0xFF383840), RoundedCornerShape(16.dp))
+            .padding(horizontal = 10.dp, vertical = 4.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -140,15 +140,15 @@ fun EmvChipGraphic(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .size(width = 38.dp, height = 28.dp)
-            .clip(RoundedCornerShape(6.dp))
-            .background(Color(0xFFE2B857))
-            .border(1.dp, Color(0xFFC59B27), RoundedCornerShape(6.dp))
+            .clip(RoundedCornerShape(8.dp))
+            .background(Color(0xFFE5E5EA))
+            .border(1.dp, Color(0xFFB0B0B8), RoundedCornerShape(8.dp))
     ) {
         Box(
             modifier = Modifier
                 .size(width = 24.dp, height = 18.dp)
                 .align(Alignment.Center)
-                .border(1.dp, Color(0xFF9E7B1D), RoundedCornerShape(3.dp))
+                .border(1.dp, Color(0xFF8E8E93), RoundedCornerShape(4.dp))
         )
     }
 }
@@ -166,25 +166,24 @@ fun IranianBankCard(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(180.dp)
-            .clip(RoundedCornerShape(20.dp))
+            .height(184.dp)
+            .clip(RoundedCornerShape(28.dp))
             .background(
                 Brush.linearGradient(
                     colors = listOf(
-                        bankInfo.primaryColor,
-                        bankInfo.secondaryColor,
-                        Color(0xFF0A0F1D)
+                        Color(0xFF24262C),
+                        Color(0xFF141518),
+                        Color(0xFF090A0C)
                     )
                 )
             )
-            .border(1.dp, Color(0x33FFFFFF), RoundedCornerShape(20.dp))
-            .padding(20.dp)
+            .border(1.dp, Color(0xFF383840), RoundedCornerShape(28.dp))
+            .padding(22.dp)
     ) {
         Column(
             modifier = Modifier.matchParentSize(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -206,7 +205,7 @@ fun IranianBankCard(
             ) {
                 Text(
                     text = maskedDisplay,
-                    style = CardNumberStyle.copy(fontSize = 18.sp),
+                    style = CardNumberStyle.copy(fontSize = 19.sp),
                     color = Color.White
                 )
             }
@@ -220,7 +219,7 @@ fun IranianBankCard(
                     Text(
                         text = "صاحب کارت",
                         style = CockpitTypography.labelSmall,
-                        color = Color.White.copy(alpha = 0.7f)
+                        color = Color(0xFFA1A1AA)
                     )
                     Text(
                         text = holderName.ifEmpty { "پذیرنده smsGA" },
@@ -232,7 +231,7 @@ fun IranianBankCard(
                     text = "شتاب",
                     style = CockpitTypography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White.copy(alpha = 0.8f)
+                    color = Color(0xFFD4D4D8)
                 )
             }
         }
