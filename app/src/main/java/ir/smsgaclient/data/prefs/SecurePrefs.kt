@@ -30,8 +30,11 @@ class SecurePrefs @Inject constructor(
         get() = prefs.getString(KEY_WEBHOOK_URL, null)
         set(value) {
             if (value != null) {
-                require(value.startsWith("https://", ignoreCase = true)) {
-                    "Webhook URL must use HTTPS protocol. Cleartext HTTP is strictly rejected."
+                require(
+                    value.startsWith("https://", ignoreCase = true) ||
+                    value.startsWith("http://", ignoreCase = true)
+                ) {
+                    "Webhook URL must use HTTP or HTTPS protocol."
                 }
             }
             prefs.edit().putString(KEY_WEBHOOK_URL, value).apply()

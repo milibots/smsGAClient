@@ -143,7 +143,7 @@
 ### مشخصات درخواست وب‌هوک (Webhook Contract)
 
 - **Method**: `POST`
-- **URL**: آدرس HTTPS اختصاصی شما (مثلاً `https://api.yourshop.ir/webhook/sms-deposit`)
+- **URL**: آدرس وب‌هوک شما (پشتیبانی کامل از هر دو پروتکل HTTPS و HTTP، مانند `https://api.yourshop.ir/webhook/sms-deposit` یا `http://192.168.1.50:8000/webhook`)
 - **Headers**:
   ```http
   Content-Type: application/json

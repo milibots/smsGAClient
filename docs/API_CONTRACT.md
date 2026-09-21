@@ -10,8 +10,8 @@ The merchant phone POSTs this JSON payload for each parsed transaction.
 
 ### 1.1 Endpoint
 - **Method**: `POST`
-- **URL**: Merchant-configured HTTPS URL (e.g. `https://merchant.example.com/api/v1/sms-hook`)
-- **Protocol**: HTTPS strictly required (plain HTTP rejected)
+- **URL**: Merchant-configured URL (e.g. `https://merchant.example.com/api/v1/sms-hook` or local `http://192.168.1.100:8000/webhook`)
+- **Protocol**: HTTP and HTTPS supported (HTTPS recommended for production)
 
 ### 1.2 Headers
 ```http

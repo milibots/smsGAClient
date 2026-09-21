@@ -37,10 +37,13 @@ class SettingsViewModel @Inject constructor(
     val uiState: StateFlow<SettingsUiState> = _uiState
 
     fun updateWebhookUrl(newUrl: String) {
-        if (!newUrl.startsWith("https://", ignoreCase = true) && newUrl.isNotEmpty()) {
+        val isValidProtocol = newUrl.startsWith("https://", ignoreCase = true) ||
+                newUrl.startsWith("http://", ignoreCase = true)
+
+        if (!isValidProtocol && newUrl.isNotEmpty()) {
             _uiState.value = _uiState.value.copy(
                 webhookUrl = newUrl,
-                errorMessage = "آدرس وب‌هوک باید حتماً با https:// شروع شود."
+                errorMessage = "آدرس وب‌هوک باید با http:// یا https:// شروع شود."
             )
             return
         }

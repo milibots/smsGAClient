@@ -108,7 +108,7 @@ fun SettingsScreen(
                         webhookInput = it
                         viewModel.updateWebhookUrl(it)
                     },
-                    label = { Text("آدرس وب‌هوک (الزاماً HTTPS)") },
+                    label = { Text("آدرس وب‌هوک (HTTP یا HTTPS)") },
                     placeholder = { Text("https://example.com/api/sms/webhook") },
                     isError = uiState.errorMessage != null,
                     modifier = Modifier.fillMaxWidth(),
