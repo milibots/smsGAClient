@@ -1,12 +1,15 @@
 package ir.smsgaclient.ui.cards
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,9 +17,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -46,17 +52,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ir.smsgaclient.ui.common.EmvChipGraphic
+import ir.smsgaclient.ui.common.IranianBankCard
 import ir.smsgaclient.ui.common.getBankInfo
 import ir.smsgaclient.ui.theme.BackgroundMidnight
 import ir.smsgaclient.ui.theme.BorderSubtle
 import ir.smsgaclient.ui.theme.CardBackground
-import ir.smsgaclient.ui.theme.CardNumberStyle
 import ir.smsgaclient.ui.theme.CockpitTypography
 import ir.smsgaclient.ui.theme.PureBlack
 import ir.smsgaclient.ui.theme.PureWhite
@@ -75,11 +81,15 @@ fun CardsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
+    val haptic = LocalHapticFeedback.current
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { showAddDialog = true },
+                onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    showAddDialog = true
+                },
                 containerColor = PureWhite,
                 contentColor = PureBlack,
                 shape = CircleShape,
@@ -168,7 +178,10 @@ fun CardsScreen(
                         )
                         Spacer(modifier = Modifier.height(18.dp))
                         Button(
-                            onClick = { showAddDialog = true },
+                            onClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                showAddDialog = true
+                            },
                             shape = RoundedCornerShape(22.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = PureWhite,
@@ -180,14 +193,69 @@ fun CardsScreen(
                     }
                 }
             } else {
+                val pagerState = rememberPagerState(pageCount = { uiState.cards.size })
+
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
+                    item {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            HorizontalPager(
+                                state = pagerState,
+                                contentPadding = PaddingValues(horizontal = 4.dp),
+                                pageSpacing = 12.dp,
+                                modifier = Modifier.fillMaxWidth()
+                            ) { page ->
+                                val cardUsage = uiState.cards[page]
+                                IranianBankCard(
+                                    bankId = cardUsage.card.bankId,
+                                    cardLast4 = cardUsage.card.last4,
+                                    holderName = cardUsage.card.holderName
+                                )
+                            }
+
+                            if (uiState.cards.size > 1) {
+                                Spacer(modifier = Modifier.height(12.dp))
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    repeat(uiState.cards.size) { index ->
+                                        val isCurrent = pagerState.currentPage == index
+                                        val dotWidth by animateDpAsState(
+                                            targetValue = if (isCurrent) 22.dp else 7.dp,
+                                            animationSpec = spring(),
+                                            label = "carouselDotWidth"
+                                        )
+                                        Box(
+                                            modifier = Modifier
+                                                .height(6.dp)
+                                                .width(dotWidth)
+                                                .clip(CircleShape)
+                                                .background(if (isCurrent) PureWhite else SurfaceElevated)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    item {
+                        Text(
+                            text = "مصرف روزانه و سقف کارت‌ها",
+                            style = CockpitTypography.titleMedium,
+                            color = TextPrimary
+                        )
+                    }
+
                     items(
                         items = uiState.cards,
                         key = { it.card.id }
                     ) { cardUsage ->
-                        BankCardWithQuotaCard(cardUsage = cardUsage)
+                        BankCardQuotaDetailCard(cardUsage = cardUsage)
                     }
                 }
             }
@@ -206,7 +274,7 @@ fun CardsScreen(
 }
 
 @Composable
-fun BankCardWithQuotaCard(cardUsage: CardWithUsage) {
+fun BankCardQuotaDetailCard(cardUsage: CardWithUsage) {
     val card = cardUsage.card
     val bankInfo = getBankInfo(card.bankId)
     val remainingRial = max(0L, card.dailyLimitRial - cardUsage.usageRial)
@@ -226,93 +294,58 @@ fun BankCardWithQuotaCard(cardUsage: CardWithUsage) {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(30.dp),
+        shape = RoundedCornerShape(26.dp),
         colors = CardDefaults.cardColors(containerColor = CardBackground),
         border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
     ) {
         Column(modifier = Modifier.padding(18.dp)) {
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(130.dp)
-                    .clip(RoundedCornerShape(22.dp))
-                    .background(
-                        Brush.linearGradient(
-                            listOf(
-                                Color(0xFF282A30),
-                                Color(0xFF181A1E),
-                                Color(0xFF0C0D10)
-                            )
-                        )
-                    )
-                    .border(1.dp, Color(0xFF383842), RoundedCornerShape(22.dp))
-                    .padding(16.dp)
-            ) {
-                Column(
-                    modifier = Modifier.matchParentSize(),
-                    verticalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = bankInfo.nameFa,
-                            style = CockpitTypography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
-                        EmvChipGraphic(modifier = Modifier.size(width = 30.dp, height = 22.dp))
-                    }
-
-                    Text(
-                        text = "••••  ••••  ••••  ${PersianNumberFormatter.toPersianDigits(card.last4)}",
-                        style = CardNumberStyle.copy(fontSize = 17.sp),
-                        color = Color.White
-                    )
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = card.holderName.ifEmpty { "صاحب حساب" },
-                            style = CockpitTypography.bodySmall,
-                            color = Color.White.copy(alpha = 0.9f)
-                        )
-                        Text(
-                            text = "شتاب",
-                            style = CockpitTypography.labelSmall,
-                            color = Color.White.copy(alpha = 0.7f)
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "میزان مصرف روزانه",
-                    style = CockpitTypography.titleSmall,
-                    color = TextSecondary
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(CircleShape)
+                            .background(SurfaceElevated),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.CreditCard,
+                            contentDescription = null,
+                            tint = PureWhite,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                    Column {
+                        Text(
+                            text = bankInfo.nameFa,
+                            style = CockpitTypography.titleSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = TextPrimary
+                        )
+                        Text(
+                            text = "•••• ${PersianNumberFormatter.toPersianDigits(card.last4)}",
+                            style = CockpitTypography.bodySmall,
+                            color = TextMuted
+                        )
+                    }
+                }
+
                 Text(
                     text = "${PersianNumberFormatter.toPersianDigits((cardUsage.usagePercent * 100).toInt().toString())}٪",
-                    style = CockpitTypography.titleSmall,
+                    style = CockpitTypography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = progressColor
                 )
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             LinearProgressIndicator(
                 progress = { animatedProgress },
@@ -324,7 +357,7 @@ fun BankCardWithQuotaCard(cardUsage: CardWithUsage) {
                 trackColor = SurfaceElevated
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(14.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -332,7 +365,7 @@ fun BankCardWithQuotaCard(cardUsage: CardWithUsage) {
             ) {
                 Column {
                     Text(
-                        text = "مصرف شده:",
+                        text = "مصرف شده امروز:",
                         style = CockpitTypography.bodySmall,
                         color = TextMuted
                     )
@@ -346,7 +379,7 @@ fun BankCardWithQuotaCard(cardUsage: CardWithUsage) {
 
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text = "مانده تا سقف:",
+                        text = "مانده تا سقف مجاز:",
                         style = CockpitTypography.bodySmall,
                         color = TextMuted
                     )
@@ -371,6 +404,7 @@ fun AddCardDialog(
     var last4 by remember { mutableStateOf("") }
     var holder by remember { mutableStateOf("") }
     var limitToman by remember { mutableStateOf("50000000") }
+    val haptic = LocalHapticFeedback.current
 
     val popularBanks = listOf(
         "blu" to "بلوبانک",
@@ -406,7 +440,10 @@ fun AddCardDialog(
                         val isSelected = selectedBank == id
                         FilterChip(
                             selected = isSelected,
-                            onClick = { selectedBank = id },
+                            onClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                selectedBank = id
+                            },
                             shape = RoundedCornerShape(20.dp),
                             label = { Text(text = name, style = CockpitTypography.labelSmall) },
                             colors = FilterChipDefaults.filterChipColors(
@@ -470,6 +507,7 @@ fun AddCardDialog(
         confirmButton = {
             Button(
                 onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                     val limitVal = (limitToman.toLongOrNull() ?: 50_000_000L) * 10
                     if (last4.length == 4) {
                         onConfirm(selectedBank, last4, holder, limitVal)

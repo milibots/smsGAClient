@@ -1,5 +1,11 @@
 package ir.smsgaclient.ui.common
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -16,9 +22,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -163,6 +171,17 @@ fun IranianBankCard(
     val bankInfo = getBankInfo(bankId)
     val maskedDisplay = "•••• •••• •••• ${PersianNumberFormatter.toPersianDigits(cardLast4)}"
 
+    val infiniteTransition = rememberInfiniteTransition(label = "cardShineTransition")
+    val shineProgress by infiniteTransition.animateFloat(
+        initialValue = -0.5f,
+        targetValue = 1.5f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 3800, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "shineProgress"
+    )
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -178,10 +197,27 @@ fun IranianBankCard(
                 )
             )
             .border(1.dp, Color(0xFF383840), RoundedCornerShape(28.dp))
-            .padding(22.dp)
     ) {
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .background(
+                    Brush.linearGradient(
+                        colors = listOf(
+                            Color.Transparent,
+                            Color.White.copy(alpha = 0.08f),
+                            Color.Transparent
+                        ),
+                        start = Offset(shineProgress * 800f, 0f),
+                        end = Offset(shineProgress * 800f + 250f, 600f)
+                    )
+                )
+        )
+
         Column(
-            modifier = Modifier.matchParentSize(),
+            modifier = Modifier
+                .matchParentSize()
+                .padding(22.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Row(

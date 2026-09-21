@@ -1,5 +1,22 @@
 package ir.smsgaclient.ui.home
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -19,14 +36,20 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.automirrored.filled.ReceiptLong
 import androidx.compose.material.icons.automirrored.filled.ScheduleSend
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.HourglassTop
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -37,9 +60,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -51,6 +78,7 @@ import ir.smsgaclient.ui.common.getBankInfo
 import ir.smsgaclient.ui.theme.BackgroundMidnight
 import ir.smsgaclient.ui.theme.BorderSubtle
 import ir.smsgaclient.ui.theme.CardBackground
+import ir.smsgaclient.ui.theme.CodeSnippetStyle
 import ir.smsgaclient.ui.theme.CockpitTypography
 import ir.smsgaclient.ui.theme.CurrencyUnitStyle
 import ir.smsgaclient.ui.theme.PureBlack
@@ -71,7 +99,8 @@ fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val context = androidx.compose.ui.platform.LocalContext.current
+    val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
 
     var hasSmsPermission by remember {
         mutableStateOf(ir.smsgaclient.util.PermissionManager.hasSmsPermissions(context))
@@ -144,7 +173,10 @@ fun HomeScreen(
                 ir.smsgaclient.ui.common.BackgroundPermissionWarningBanner(
                     isSmsMissing = !hasSmsPermission,
                     isBatteryOptimized = !isBatteryExempt,
-                    onResolveClick = { showSetupDialog = true }
+                    onResolveClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        showSetupDialog = true
+                    }
                 )
             }
         }
@@ -202,7 +234,10 @@ fun HomeScreen(
                         .clip(RoundedCornerShape(20.dp))
                         .background(SurfaceElevated)
                         .border(1.dp, BorderSubtle, RoundedCornerShape(20.dp))
-                        .clickable { onNavigateToTransactions() }
+                        .clickable {
+                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                            onNavigateToTransactions()
+                        }
                         .padding(horizontal = 12.dp, vertical = 6.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -270,9 +305,9 @@ fun HomeScreen(
             }
         } else {
             items(uiState.recentTransactions) { tx ->
-                RecentTransactionRow(
+                ExpandableTransactionCard(
                     transaction = tx,
-                    onClick = { onNavigateToDetail(tx.messageId) }
+                    onOpenDetail = { onNavigateToDetail(tx.messageId) }
                 )
             }
         }
@@ -285,6 +320,17 @@ fun SalesHeroCard(
     txCount: Int
 ) {
     val avgTicketToman = if (txCount > 0) salesToman / max(1, txCount) else 0L
+
+    val infiniteTransition = rememberInfiniteTransition(label = "heroShineTransition")
+    val shineProgress by infiniteTransition.animateFloat(
+        initialValue = -0.5f,
+        targetValue = 1.5f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 4200, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "heroShineProgress"
+    )
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -304,9 +350,24 @@ fun SalesHeroCard(
                         )
                     )
                 )
-                .padding(24.dp)
         ) {
-            Column {
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .background(
+                        Brush.linearGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                Color.White.copy(alpha = 0.06f),
+                                Color.Transparent
+                            ),
+                            start = Offset(shineProgress * 1000f, 0f),
+                            end = Offset(shineProgress * 1000f + 300f, 600f)
+                        )
+                    )
+            )
+
+            Column(modifier = Modifier.padding(24.dp)) {
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -477,57 +538,143 @@ fun MetricCard(
 }
 
 @Composable
-fun RecentTransactionRow(
+fun ExpandableTransactionCard(
     transaction: TransactionEntity,
-    onClick: () -> Unit
+    onOpenDetail: () -> Unit
 ) {
     val bankInfo = getBankInfo(transaction.bankId)
     val cardDisplay = transaction.cardLast4?.let { "کارت: •••• ${PersianNumberFormatter.toPersianDigits(it)}" } ?: "کارت نامشخص"
+    var isExpanded by remember { mutableStateOf(false) }
+    val haptic = LocalHapticFeedback.current
+    val context = LocalContext.current
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() },
+            .clickable {
+                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                isExpanded = !isExpanded
+            },
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(containerColor = CardBackground),
         border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Column(modifier = Modifier.padding(16.dp)) {
             Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(14.dp)
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                BankAvatar(bankId = transaction.bankId, size = 44.dp)
-                Column {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
+                    BankAvatar(bankId = transaction.bankId, size = 44.dp)
+                    Column {
+                        Text(
+                            text = bankInfo.nameFa,
+                            style = CockpitTypography.titleMedium,
+                            color = TextPrimary
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = cardDisplay,
+                            style = CockpitTypography.bodySmall,
+                            color = TextMuted
+                        )
+                    }
+                }
+
+                Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text = bankInfo.nameFa,
+                        text = "+ ${PersianNumberFormatter.formatToman(transaction.amountRial / 10)}",
                         style = CockpitTypography.titleMedium,
-                        color = TextPrimary
+                        fontWeight = FontWeight.Bold,
+                        color = PureWhite
                     )
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = cardDisplay,
-                        style = CockpitTypography.bodySmall,
-                        color = TextMuted
-                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    StatusPill(status = transaction.status)
                 }
             }
 
-            Column(horizontalAlignment = Alignment.End) {
-                Text(
-                    text = "+ ${PersianNumberFormatter.formatToman(transaction.amountRial / 10)}",
-                    style = CockpitTypography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = PureWhite
-                )
-                Spacer(modifier = Modifier.height(6.dp))
-                StatusPill(status = transaction.status)
+            AnimatedVisibility(
+                visible = isExpanded,
+                enter = expandVertically(animationSpec = spring(stiffness = Spring.StiffnessMediumLow)) + fadeIn(),
+                exit = shrinkVertically(animationSpec = spring(stiffness = Spring.StiffnessMediumLow)) + fadeOut()
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 14.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(SurfaceElevated)
+                            .padding(12.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = "شناسه پیامک:",
+                                    style = CockpitTypography.labelSmall,
+                                    color = TextMuted
+                                )
+                                Text(
+                                    text = transaction.messageId.take(20) + "...",
+                                    style = CodeSnippetStyle,
+                                    color = TextSecondary
+                                )
+                            }
+                            IconButton(
+                                onClick = {
+                                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                    clipboard.setPrimaryClip(ClipData.newPlainText("Message ID", transaction.messageId))
+                                    Toast.makeText(context, "شناسه در حافظه کپی شد", Toast.LENGTH_SHORT).show()
+                                },
+                                modifier = Modifier.size(28.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.ContentCopy,
+                                    contentDescription = "کپی",
+                                    tint = PureWhite,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    OutlinedButton(
+                        onClick = onOpenDetail,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(20.dp),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                                contentDescription = null,
+                                tint = PureWhite,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Text(
+                                text = "مشاهده جزئیات کامل و رسید",
+                                style = CockpitTypography.labelMedium,
+                                color = PureWhite
+                            )
+                        }
+                    }
+                }
             }
         }
     }

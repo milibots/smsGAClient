@@ -3,11 +3,11 @@ package ir.smsgaclient.ui.common
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -32,7 +32,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -69,6 +72,8 @@ fun SmsGaBottomBar(
     onNavigate: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val haptic = LocalHapticFeedback.current
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -105,15 +110,28 @@ fun SmsGaBottomBar(
                         animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
                         label = "pillContentColor"
                     )
+                    val scale by animateFloatAsState(
+                        targetValue = if (selected) 1.05f else 1.0f,
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            stiffness = Spring.StiffnessMediumLow
+                        ),
+                        label = "pillScale"
+                    )
 
                     Box(
                         modifier = Modifier
+                            .graphicsLayer {
+                                scaleX = scale
+                                scaleY = scale
+                            }
                             .clip(RoundedCornerShape(26.dp))
                             .background(backgroundColor)
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = null
                             ) {
+                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                                 onNavigate(item.route)
                             }
                             .padding(horizontal = 14.dp, vertical = 9.dp),
