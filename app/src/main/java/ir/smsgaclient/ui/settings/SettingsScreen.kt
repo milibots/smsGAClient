@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,23 +23,26 @@ import androidx.compose.material.icons.filled.CloudDone
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,6 +66,7 @@ import ir.smsgaclient.ui.theme.SurfaceElevated
 import ir.smsgaclient.ui.theme.TextMuted
 import ir.smsgaclient.ui.theme.TextPrimary
 import ir.smsgaclient.ui.theme.TextSecondary
+import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsScreen(
@@ -71,7 +76,7 @@ fun SettingsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var webhookInput by remember(uiState.webhookUrl) { mutableStateOf(uiState.webhookUrl) }
-    var showRevokeConfirmDialog by remember { mutableStateOf(false) }
+    var showRevokeSheet by remember { mutableStateOf(false) }
 
     LazyColumn(
         modifier = modifier
@@ -359,7 +364,7 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 OutlinedButton(
-                    onClick = { showRevokeConfirmDialog = true },
+                    onClick = { showRevokeSheet = true },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(22.dp),
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = SilverPlatinum),
@@ -371,30 +376,77 @@ fun SettingsScreen(
         }
     }
 
-    if (showRevokeConfirmDialog) {
-        AlertDialog(
-            onDismissRequest = { showRevokeConfirmDialog = false },
-            title = {
+    if (showRevokeSheet) {
+        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        val scope = rememberCoroutineScope()
+
+        ModalBottomSheet(
+            onDismissRequest = { showRevokeSheet = false },
+            sheetState = sheetState,
+            containerColor = CardBackground,
+            shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
+            dragHandle = {
+                Box(
+                    modifier = Modifier
+                        .padding(top = 12.dp, bottom = 4.dp)
+                        .size(width = 40.dp, height = 4.dp)
+                        .clip(RoundedCornerShape(2.dp))
+                        .background(BorderSubtle)
+                )
+            }
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
+                    .padding(bottom = 16.dp)
+                    .navigationBarsPadding(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(CircleShape)
+                        .background(SurfaceElevated)
+                        .border(1.dp, BorderSubtle, CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Warning,
+                        contentDescription = null,
+                        tint = PureWhite,
+                        modifier = Modifier.size(26.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 Text(
                     text = "لغو جفت‌سازی دستگاه؟",
                     style = CockpitTypography.titleLarge,
                     color = PureWhite
                 )
-            },
-            text = {
+
+                Spacer(modifier = Modifier.height(8.dp))
+
                 Text(
                     text = "با لغو اتصال، کلیدهای احراز هویت حذف شده و برنامه تا جفت‌سازی مجدد پیامکی ارسال نخواهد کرد.",
                     style = CockpitTypography.bodyMedium,
-                    color = TextSecondary
+                    color = TextSecondary,
+                    lineHeight = 22.sp
                 )
-            },
-            confirmButton = {
+
+                Spacer(modifier = Modifier.height(24.dp))
+
                 Button(
                     onClick = {
-                        showRevokeConfirmDialog = false
-                        viewModel.revokePairing()
+                        scope.launch { sheetState.hide() }.invokeOnCompletion {
+                            showRevokeSheet = false
+                            viewModel.revokePairing()
+                        }
                     },
-                    shape = RoundedCornerShape(20.dp),
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(24.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = PureWhite,
                         contentColor = PureBlack
@@ -402,19 +454,23 @@ fun SettingsScreen(
                 ) {
                     Text(text = "تأیید و لغو", color = PureBlack, fontWeight = FontWeight.Bold)
                 }
-            },
-            dismissButton = {
+
+                Spacer(modifier = Modifier.height(8.dp))
+
                 OutlinedButton(
-                    onClick = { showRevokeConfirmDialog = false },
-                    shape = RoundedCornerShape(20.dp),
+                    onClick = {
+                        scope.launch { sheetState.hide() }.invokeOnCompletion {
+                            showRevokeSheet = false
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(24.dp),
                     border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
                 ) {
                     Text(text = "انصراف", color = TextSecondary)
                 }
-            },
-            containerColor = CardBackground,
-            shape = RoundedCornerShape(30.dp)
-        )
+            }
+        }
     }
 }
 

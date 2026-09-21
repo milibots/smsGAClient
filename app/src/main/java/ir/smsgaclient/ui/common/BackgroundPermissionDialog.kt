@@ -6,14 +6,37 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.BatteryAlert
+import androidx.compose.material.icons.filled.BatteryChargingFull
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.Sms
+import androidx.compose.material.icons.filled.SmsFailed
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,9 +46,16 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
-import ir.smsgaclient.ui.theme.*
+import ir.smsgaclient.ui.theme.BorderSubtle
+import ir.smsgaclient.ui.theme.CardBackground
+import ir.smsgaclient.ui.theme.CockpitTypography
+import ir.smsgaclient.ui.theme.GrayTextSecondary
+import ir.smsgaclient.ui.theme.PureBlack
+import ir.smsgaclient.ui.theme.PureWhite
+import ir.smsgaclient.ui.theme.SurfaceElevated
+import ir.smsgaclient.ui.theme.TextPrimary
+import ir.smsgaclient.ui.theme.TextSecondary
+import kotlinx.coroutines.launch
 
 @Composable
 fun BackgroundPermissionWarningBanner(
@@ -128,149 +158,160 @@ fun BackgroundSetupModalDialog(
     onDismiss: () -> Unit,
     oemGuidance: String
 ) {
-    Dialog(
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val scope = rememberCoroutineScope()
+
+    ModalBottomSheet(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
-    ) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth(0.92f)
-                .padding(vertical = 16.dp),
-            shape = RoundedCornerShape(34.dp),
-            colors = CardDefaults.cardColors(containerColor = CardBackground),
-            border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
-        ) {
-            Column(
+        sheetState = sheetState,
+        containerColor = CardBackground,
+        shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
+        dragHandle = {
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(22.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+                    .padding(top = 12.dp, bottom = 4.dp)
+                    .size(width = 40.dp, height = 4.dp)
+                    .clip(RoundedCornerShape(2.dp))
+                    .background(BorderSubtle)
+            )
+        }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 22.dp)
+                .padding(bottom = 16.dp)
+                .navigationBarsPadding(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-                Box(
-                    modifier = Modifier
-                        .size(60.dp)
-                        .clip(CircleShape)
-                        .background(
-                            Brush.radialGradient(
-                                colors = listOf(Color(0xFF2E2E36), Color(0xFF141416))
-                            )
+            Box(
+                modifier = Modifier
+                    .size(60.dp)
+                    .clip(CircleShape)
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(Color(0xFF2E2E36), Color(0xFF141416))
                         )
-                        .border(1.dp, Color(0xFF42424E), CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Shield,
-                        contentDescription = null,
-                        tint = PureWhite,
-                        modifier = Modifier.size(28.dp)
                     )
-                }
-
-                Spacer(modifier = Modifier.height(14.dp))
-
-                Text(
-                    text = "تنظیم دریافت مداوم در پس‌زمینه",
-                    style = CockpitTypography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                    color = TextPrimary
+                    .border(1.dp, Color(0xFF42424E), CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Shield,
+                    contentDescription = null,
+                    tint = PureWhite,
+                    modifier = Modifier.size(28.dp)
                 )
+            }
 
-                Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(14.dp))
 
-                Text(
-                    text = "برای اینکه حتی هنگام خاموش بودن نمایشگر یا در طول شب، هیچ پیامک واریزی از دست نرود، نیازمند مجوزهای زیر هستیم:",
-                    style = CockpitTypography.bodyMedium,
-                    color = TextSecondary,
-                    lineHeight = 22.sp
-                )
+            Text(
+                text = "تنظیم دریافت مداوم در پس‌زمینه",
+                style = CockpitTypography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                color = TextPrimary
+            )
 
-                Spacer(modifier = Modifier.height(18.dp))
+            Spacer(modifier = Modifier.height(6.dp))
 
-                SetupStepItem(
-                    icon = Icons.Default.Sms,
-                    title = "۱. مجوز خواندن پیامک‌ها (SMS)",
-                    description = "برای دریافت خودکار واریزی‌ها (هیچ داده‌ای به غیر از وب‌هوک شما ارسال نمی‌شود).",
-                    isGranted = hasSmsPermission,
-                    buttonText = "اعطای مجوز پیامک",
-                    onAction = onRequestSms
-                )
+            Text(
+                text = "برای اینکه حتی هنگام خاموش بودن نمایشگر یا در طول شب، هیچ پیامک واریزی از دست نرود، نیازمند مجوزهای زیر هستیم:",
+                style = CockpitTypography.bodyMedium,
+                color = TextSecondary,
+                lineHeight = 22.sp
+            )
 
-                Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
-                SetupStepItem(
-                    icon = Icons.Default.BatteryChargingFull,
-                    title = "۲. عدم بهینه‌سازی باتری (نامحدود)",
-                    description = "جلوگیری از قطع سرویس و بستن برنامه توسط اندروید در حالت خواب عمیق (Doze).",
-                    isGranted = isBatteryExempted,
-                    buttonText = "رفع محدودیت باتری",
-                    onAction = onRequestBatteryExemption
-                )
+            SetupStepItem(
+                icon = Icons.Default.Sms,
+                title = "۱. مجوز خواندن پیامک‌ها (SMS)",
+                description = "برای دریافت خودکار واریزی‌ها (هیچ داده‌ای به غیر از وب‌هوک شما ارسال نمی‌شود).",
+                isGranted = hasSmsPermission,
+                buttonText = "اعطای مجوز پیامک",
+                onAction = onRequestSms
+            )
 
-                Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(22.dp),
-                    colors = CardDefaults.cardColors(containerColor = SurfaceElevated),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
-                ) {
-                    Column(modifier = Modifier.padding(14.dp)) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Info,
-                                contentDescription = null,
-                                tint = PureWhite,
-                                modifier = Modifier.size(18.dp)
-                            )
-                            Text(
-                                text = "شروع خودکار در گوشی شما",
-                                style = CockpitTypography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                                color = TextPrimary
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = oemGuidance,
-                            style = CockpitTypography.bodySmall,
-                            color = TextSecondary,
-                            lineHeight = 18.sp
+            SetupStepItem(
+                icon = Icons.Default.BatteryChargingFull,
+                title = "۲. عدم بهینه‌سازی باتری (نامحدود)",
+                description = "جلوگیری از قطع سرویس و بستن برنامه توسط اندروید در حالت خواب عمیق (Doze).",
+                isGranted = isBatteryExempted,
+                buttonText = "رفع محدودیت باتری",
+                onAction = onRequestBatteryExemption
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(22.dp),
+                colors = CardDefaults.cardColors(containerColor = SurfaceElevated),
+                border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
+            ) {
+                Column(modifier = Modifier.padding(14.dp)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = null,
+                            tint = PureWhite,
+                            modifier = Modifier.size(18.dp)
                         )
-                        Spacer(modifier = Modifier.height(10.dp))
-                        OutlinedButton(
-                            onClick = onOpenOemSettings,
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(20.dp),
-                            border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
-                        ) {
-                            Text(
-                                text = "باز کردن تنظیمات اختصاصی دستگاه",
-                                style = CockpitTypography.labelMedium,
-                                color = PureWhite
-                            )
-                        }
+                        Text(
+                            text = "شروع خودکار در گوشی شما",
+                            style = CockpitTypography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                            color = TextPrimary
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = oemGuidance,
+                        style = CockpitTypography.bodySmall,
+                        color = TextSecondary,
+                        lineHeight = 18.sp
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    OutlinedButton(
+                        onClick = onOpenOemSettings,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(20.dp),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
+                    ) {
+                        Text(
+                            text = "باز کردن تنظیمات اختصاصی دستگاه",
+                            style = CockpitTypography.labelMedium,
+                            color = PureWhite
+                        )
                     }
                 }
+            }
 
-                Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-                Button(
-                    onClick = onDismiss,
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(24.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (hasSmsPermission && isBatteryExempted) PureWhite else SurfaceElevated,
-                        contentColor = if (hasSmsPermission && isBatteryExempted) PureBlack else TextPrimary
-                    )
-                ) {
-                    Text(
-                        text = if (hasSmsPermission && isBatteryExempted) "عالی شد، بستن پنجره" else "متوجه شدم (بعداً تنظیم می‌کنم)",
-                        style = CockpitTypography.labelLarge,
-                        color = if (hasSmsPermission && isBatteryExempted) PureBlack else TextPrimary
-                    )
-                }
+            Button(
+                onClick = {
+                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                        onDismiss()
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(24.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (hasSmsPermission && isBatteryExempted) PureWhite else SurfaceElevated,
+                    contentColor = if (hasSmsPermission && isBatteryExempted) PureBlack else TextPrimary
+                )
+            ) {
+                Text(
+                    text = if (hasSmsPermission && isBatteryExempted) "عالی شد، بستن پنجره" else "متوجه شدم (بعداً تنظیم می‌کنم)",
+                    style = CockpitTypography.labelLarge,
+                    color = if (hasSmsPermission && isBatteryExempted) PureBlack else TextPrimary
+                )
             }
         }
     }

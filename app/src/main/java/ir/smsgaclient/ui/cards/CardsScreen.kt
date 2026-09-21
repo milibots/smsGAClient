@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -28,7 +29,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CreditCard
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -38,16 +38,19 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -73,6 +76,7 @@ import ir.smsgaclient.ui.theme.TextPrimary
 import ir.smsgaclient.ui.theme.TextSecondary
 import ir.smsgaclient.util.PersianNumberFormatter
 import kotlin.math.max
+import kotlinx.coroutines.launch
 
 @Composable
 fun CardsScreen(
@@ -80,7 +84,7 @@ fun CardsScreen(
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var showAddDialog by remember { mutableStateOf(false) }
+    var showAddSheet by remember { mutableStateOf(false) }
     val haptic = LocalHapticFeedback.current
 
     Scaffold(
@@ -88,7 +92,7 @@ fun CardsScreen(
             FloatingActionButton(
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                    showAddDialog = true
+                    showAddSheet = true
                 },
                 containerColor = PureWhite,
                 contentColor = PureBlack,
@@ -180,7 +184,7 @@ fun CardsScreen(
                         Button(
                             onClick = {
                                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                                showAddDialog = true
+                                showAddSheet = true
                             },
                             shape = RoundedCornerShape(22.dp),
                             colors = ButtonDefaults.buttonColors(
@@ -261,12 +265,12 @@ fun CardsScreen(
             }
         }
 
-        if (showAddDialog) {
-            AddCardDialog(
-                onDismiss = { showAddDialog = false },
+        if (showAddSheet) {
+            AddCardBottomSheet(
+                onDismiss = { showAddSheet = false },
                 onConfirm = { bank, last4, holder, limit ->
                     viewModel.addCard(bank, last4, holder, limit)
-                    showAddDialog = false
+                    showAddSheet = false
                 }
             )
         }
@@ -396,10 +400,12 @@ fun BankCardQuotaDetailCard(cardUsage: CardWithUsage) {
 }
 
 @Composable
-fun AddCardDialog(
+fun AddCardBottomSheet(
     onDismiss: () -> Unit,
     onConfirm: (bank: String, last4: String, holder: String, limit: Long) -> Unit
 ) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val scope = rememberCoroutineScope()
     var selectedBank by remember { mutableStateOf("blu") }
     var last4 by remember { mutableStateOf("") }
     var holder by remember { mutableStateOf("") }
@@ -416,105 +422,124 @@ fun AddCardDialog(
         "keshavarzi" to "کشاورزی"
     )
 
-    AlertDialog(
+    ModalBottomSheet(
         onDismissRequest = onDismiss,
-        title = {
+        sheetState = sheetState,
+        containerColor = CardBackground,
+        shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
+        dragHandle = {
+            Box(
+                modifier = Modifier
+                    .padding(top = 12.dp, bottom = 4.dp)
+                    .size(width = 40.dp, height = 4.dp)
+                    .clip(RoundedCornerShape(2.dp))
+                    .background(BorderSubtle)
+            )
+        }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+                .padding(bottom = 16.dp)
+                .navigationBarsPadding(),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
             Text(
                 text = "افزودن کارت بانکی جدید",
                 style = CockpitTypography.titleLarge,
                 color = TextPrimary
             )
-        },
-        text = {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = "انتخاب بانک:",
-                    style = CockpitTypography.titleSmall,
-                    color = TextSecondary
-                )
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    items(popularBanks) { (id, name) ->
-                        val isSelected = selectedBank == id
-                        FilterChip(
-                            selected = isSelected,
-                            onClick = {
-                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                                selectedBank = id
-                            },
-                            shape = RoundedCornerShape(20.dp),
-                            label = { Text(text = name, style = CockpitTypography.labelSmall) },
-                            colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = PureWhite,
-                                selectedLabelColor = PureBlack,
-                                containerColor = SurfaceElevated,
-                                labelColor = TextSecondary
-                            )
+
+            Text(
+                text = "انتخاب بانک:",
+                style = CockpitTypography.titleSmall,
+                color = TextSecondary
+            )
+
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                items(popularBanks) { (id, name) ->
+                    val isSelected = selectedBank == id
+                    FilterChip(
+                        selected = isSelected,
+                        onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                            selectedBank = id
+                        },
+                        shape = RoundedCornerShape(20.dp),
+                        label = { Text(text = name, style = CockpitTypography.labelSmall) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = PureWhite,
+                            selectedLabelColor = PureBlack,
+                            containerColor = SurfaceElevated,
+                            labelColor = TextSecondary
                         )
-                    }
+                    )
                 }
-
-                OutlinedTextField(
-                    value = last4,
-                    onValueChange = { if (it.length <= 4 && it.all { char -> char.isDigit() }) last4 = it },
-                    label = { Text("۴ رقم آخر کارت") },
-                    placeholder = { Text("مثلاً ۴۸۲۱") },
-                    singleLine = true,
-                    shape = RoundedCornerShape(20.dp),
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = PureWhite,
-                        unfocusedBorderColor = BorderSubtle,
-                        focusedTextColor = TextPrimary,
-                        unfocusedTextColor = TextPrimary
-                    )
-                )
-
-                OutlinedTextField(
-                    value = holder,
-                    onValueChange = { holder = it },
-                    label = { Text("نام صاحب کارت") },
-                    placeholder = { Text("مثلاً علی رضایی") },
-                    singleLine = true,
-                    shape = RoundedCornerShape(20.dp),
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = PureWhite,
-                        unfocusedBorderColor = BorderSubtle,
-                        focusedTextColor = TextPrimary,
-                        unfocusedTextColor = TextPrimary
-                    )
-                )
-
-                OutlinedTextField(
-                    value = limitToman,
-                    onValueChange = { if (it.all { char -> char.isDigit() }) limitToman = it },
-                    label = { Text("سقف روزانه (تومان)") },
-                    singleLine = true,
-                    shape = RoundedCornerShape(20.dp),
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = PureWhite,
-                        unfocusedBorderColor = BorderSubtle,
-                        focusedTextColor = TextPrimary,
-                        unfocusedTextColor = TextPrimary
-                    )
-                )
             }
-        },
-        confirmButton = {
+
+            OutlinedTextField(
+                value = last4,
+                onValueChange = { if (it.length <= 4 && it.all { char -> char.isDigit() }) last4 = it },
+                label = { Text("۴ رقم آخر کارت") },
+                placeholder = { Text("مثلاً ۴۸۲۱") },
+                singleLine = true,
+                shape = RoundedCornerShape(20.dp),
+                modifier = Modifier.fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = PureWhite,
+                    unfocusedBorderColor = BorderSubtle,
+                    focusedTextColor = TextPrimary,
+                    unfocusedTextColor = TextPrimary
+                )
+            )
+
+            OutlinedTextField(
+                value = holder,
+                onValueChange = { holder = it },
+                label = { Text("نام صاحب کارت") },
+                placeholder = { Text("مثلاً علی رضایی") },
+                singleLine = true,
+                shape = RoundedCornerShape(20.dp),
+                modifier = Modifier.fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = PureWhite,
+                    unfocusedBorderColor = BorderSubtle,
+                    focusedTextColor = TextPrimary,
+                    unfocusedTextColor = TextPrimary
+                )
+            )
+
+            OutlinedTextField(
+                value = limitToman,
+                onValueChange = { if (it.all { char -> char.isDigit() }) limitToman = it },
+                label = { Text("سقف روزانه (تومان)") },
+                singleLine = true,
+                shape = RoundedCornerShape(20.dp),
+                modifier = Modifier.fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = PureWhite,
+                    unfocusedBorderColor = BorderSubtle,
+                    focusedTextColor = TextPrimary,
+                    unfocusedTextColor = TextPrimary
+                )
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
             Button(
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                     val limitVal = (limitToman.toLongOrNull() ?: 50_000_000L) * 10
                     if (last4.length == 4) {
-                        onConfirm(selectedBank, last4, holder, limitVal)
+                        scope.launch { sheetState.hide() }.invokeOnCompletion {
+                            onConfirm(selectedBank, last4, holder, limitVal)
+                        }
                     }
                 },
                 enabled = last4.length == 4,
-                shape = RoundedCornerShape(22.dp),
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(24.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = PureWhite,
                     contentColor = PureBlack
@@ -522,17 +547,19 @@ fun AddCardDialog(
             ) {
                 Text(text = "افزودن کارت", color = PureBlack, fontWeight = FontWeight.Bold)
             }
-        },
-        dismissButton = {
+
             OutlinedButton(
-                onClick = onDismiss,
-                shape = RoundedCornerShape(22.dp),
+                onClick = {
+                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                        onDismiss()
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(24.dp),
                 border = androidx.compose.foundation.BorderStroke(1.dp, BorderSubtle)
             ) {
                 Text(text = "انصراف", color = TextSecondary)
             }
-        },
-        containerColor = CardBackground,
-        shape = RoundedCornerShape(32.dp)
-    )
+        }
+    }
 }

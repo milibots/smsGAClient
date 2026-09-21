@@ -87,4 +87,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `x86_64`: 1.57 MB (SHA256: `DC1A483E9A175FC9...`)
   - `x86`: 1.57 MB (SHA256: `99B29D728F4BEFAA...`)
 
+## [1.0.2] - 2026-09-21
+
+### Changed & Enhanced (Monochrome Luxury & Jetpack Compose UI)
+- **Monochrome Luxury Design System**: Pure OLED Black (`#000000`), deep obsidian cards, brushed titanium bank cards, and high-contrast Black-on-White CTA actions.
+- **Floating Pill Bottom Navigation**: Floating capsule container with 34dp corner radius and smooth spring-animated selection capsule.
+- **Titanium Specular Sheen**: Continuous specular shine sweep across Iranian bank cards and sales hero dashboard.
+- **Horizontal Pager Card Carousel**: Fluid horizontal card swiping with dynamic animated pill page indicators.
+- **Animated Segmented Date Filters**: Sliding capsule segmented control with instant tactile haptic feedback.
+- **Expandable Transaction Cards**: In-place detail expansion with spring physics revealing raw Message ID and 1-tap copy.
+- **Native Tactile Haptics**: Integrated on navigation pills, filter tabs, and card interactions.
+- **Scalable Vector Logo**: In-app metallic geometric logo asset (`MonochromeLogo.kt`).
+
+## [1.0.3] - 2026-09-21
+
+### Added & Improved (Native Typography & Material 3 Sheets)
+- **Vazirmatn Persian Typography Family**: Bundled authentic Iranian font family `Vazirmatn` across 5 weights (Light, Regular, Medium, SemiBold, Bold) in `res/font/`, linked to `CockpitTypography`. Flawless Persian diacritics and glyph rendering without clipping.
+- **Material 3 Modal Bottom Sheets**:
+  - **CardsScreen**: Transformed "Add Card" dialog into a fluid `ModalBottomSheet` with drag handle, bank selection chips, and edge-to-edge navigation bar padding.
+  - **SettingsScreen**: Modernized "Revoke Pairing" confirmation into a dedicated bottom sheet with warning badge and safe coroutine dismiss.
+  - **Background Setup Sheet**: Redesigned `BackgroundPermissionDialog` into a bottom sheet sheet flow with OEM autostart guidance and battery exemption action buttons.
+- **Build & Memory Optimization**:
+  - Upgraded Gradle daemon heap (`4096m`) and max metaspace (`1024m`) in `gradle.properties`.
+  - Upgraded release build artifacts to signed v1.0.3 with full ABI split support.
+
+
 
